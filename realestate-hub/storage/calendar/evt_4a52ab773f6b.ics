@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//RealEstate Hub//LangGraph Agent//EN
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:evt_4a52ab773f6b@realestatehub.pk
+DTSTAMP:20260906T065133Z
+DTSTART:20260907T140000Z
+DTEND:20260907T144500Z
+SUMMARY:Rescheduled: Visit for RealEstate Hub Property Visit with Usman
+DESCRIPTION:RESCHEDULED Property Visit\nClient: Usman (0300-1234567)\nAgent: Ahmed Raza\nProperty: RealEstate Hub Property Visit\nNew Date: Day after tomorrow at 2:00 PM\nNotes: Rescheduled visit for RealEstate Hub Property Visit\n
+LOCATION:RealEstate Hub Property Visit
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR

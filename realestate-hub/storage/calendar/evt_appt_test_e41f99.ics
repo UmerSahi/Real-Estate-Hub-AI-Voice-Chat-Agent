@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//RealEstate Hub//LangGraph Agent//EN
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:evt_appt_test_e41f99@realestatehub.pk
+DTSTAMP:20260906T143357Z
+DTSTART:20271225T130000Z
+DTEND:20271225T134500Z
+SUMMARY:Rescheduled: Visit for RealEstate Hub Property with Valued Client
+DESCRIPTION:RESCHEDULED Property Visit\nClient: Valued Client (Not Provided)\nAgent: Ahmed Raza\nProperty: RealEstate Hub Property\nNew Date: 2027-12-25 at 1:00 PM\nNotes: Rescheduled visit for 5 Marla House\n
+LOCATION:RealEstate Hub Property
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR

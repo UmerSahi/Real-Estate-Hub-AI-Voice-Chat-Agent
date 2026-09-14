@@ -1,0 +1,14 @@
+{
+  "event_id": "evt_0b2ce1c6d26e",
+  "client_name": "\u06a9\u0645\u0628\u0644\u0688\u0648\u0631",
+  "phone": "0300-1234567",
+  "employee": "Ahmed Raza",
+  "property_title": "10 Marla House in DHA Defence, Lahore, Punjab",
+  "property_id": "PROP-1078",
+  "date_str": "Tomorrow",
+  "time_str": "10:30 AM",
+  "notes": "Scheduled visit for 10 Marla House in DHA Defence, Lahore, Punjab",
+  "google_calendar_link": "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Property+Visit%3A+10+Marla+House+in+DHA+Defence%2C+Lahore%2C+Punjab+with+%DA%A9%D9%85%D8%A8%D9%84%DA%88%D9%88%D8%B1&details=RealEstate+Hub+Scheduled+Property+Visit%0AClient%3A+%DA%A9%D9%85%D8%A8%D9%84%DA%88%D9%88%D8%B1+%280300-1234567%29%0AAssigned+Agent%3A+Ahmed+Raza%0AProperty%3A+10+Marla+House+in+DHA+Defence%2C+Lahore%2C+Punjab+%28PROP-1078%29%0ADate%3A+Tomorrow+at+10%3A30+AM%0ANotes%3A+Scheduled+visit+for+10+Marla+House+in+DHA+Defence%2C+Lahore%2C+Punjab%0A&location=10+Marla+House+in+DHA+Defence%2C+Lahore%2C+Punjab&dates=20260907T103000Z%2F20260907T111500Z",
+  "status": "confirmed",
+  "created_at": "2026-09-06T06:31:28.773290+00:00"
+}

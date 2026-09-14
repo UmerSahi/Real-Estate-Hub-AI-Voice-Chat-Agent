@@ -1,0 +1,19 @@
+{
+  "email_id": "eml_a689490b1bd9",
+  "appointment_id": "APT-7107",
+  "event_type": "booking",
+  "recipient": "umersahi005@gmail.com",
+  "customer_email": "",
+  "employee_name": "Ahmed Raza",
+  "client_name": "Hamza Ali",
+  "client_phone": "03008877665",
+  "property_title": "House in Lahore",
+  "property_id": "PROP-1000",
+  "date_str": "2027-03-22",
+  "time_str": "3:00 PM",
+  "subject": "[APT-7107] [NEW VISIT] House in Lahore on 2027-03-22 with Hamza Ali",
+  "plain_text": "\u2728 New Property Visit Scheduled\n===================================\nAppointment ID: APT-7107 (Save this ID to reschedule or cancel your visit)\nEmployee: Ahmed Raza (umersahi005@gmail.com)\nClient: Hamza Ali (Phone: 03008877665)\nProperty: House in Lahore (PROP-1000)\nDate & Time: 2027-03-22 at 3:00 PM\nRequirements: Visit scheduled for House in Lahore\nNotes: CRM Appointment ID: APT-7107\nCalendar Link: https://calendar.google.com/calendar/render?action=TEMPLATE&text=Property+Visit%3A+House+in+Lahore+with+Hamza+Ali&details=RealEstate+Hub+Scheduled+Property+Visit%0AClient%3A+Hamza+Ali+%2803008877665%29%0AAssigned+Agent%3A+Ahmed+Raza%0AProperty%3A+House+in+Lahore+%28PROP-1000%29%0ADate%3A+2027-03-22+at+3%3A00+PM%0ANotes%3A+Scheduled+visit+for+House+in+Lahore%0A&location=House+in+Lahore&dates=20270322T150000Z%2F20270322T154500Z\n",
+  "sent_at": "2026-09-06T14:33:42.204021+00:00",
+  "smtp_delivered": true,
+  "smtp_error": null
+}

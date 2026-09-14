@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//RealEstate Hub//LangGraph Agent//EN
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:evt_0b2ce1c6d26e@realestatehub.pk
+DTSTAMP:20260906T063128Z
+DTSTART:20260907T103000Z
+DTEND:20260907T111500Z
+SUMMARY:Property Visit: 10 Marla House in DHA Defence, Lahore, Punjab with کمبلڈور
+DESCRIPTION:RealEstate Hub Scheduled Property Visit\nClient: کمبلڈور (0300-1234567)\nAssigned Agent: Ahmed Raza\nProperty: 10 Marla House in DHA Defence, Lahore, Punjab (PROP-1078)\nDate: Tomorrow at 10:30 AM\nNotes: Scheduled visit for 10 Marla House in DHA Defence, Lahore, Punjab\n
+LOCATION:10 Marla House in DHA Defence, Lahore, Punjab
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR

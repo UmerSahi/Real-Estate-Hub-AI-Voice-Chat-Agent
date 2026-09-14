@@ -1,0 +1,14 @@
+{
+  "event_id": "evt_caff207c6568",
+  "client_name": "Test User",
+  "phone": "0300-1112233",
+  "employee": "Ahmed Raza",
+  "property_title": "5 Marla House in DHA Phase 6",
+  "property_id": "PROP-1000",
+  "date_str": "Tomorrow",
+  "time_str": "3:00 PM",
+  "notes": "",
+  "google_calendar_link": "https://calendar.google.com/calendar/render?action=TEMPLATE&text=Property+Visit%3A+5+Marla+House+in+DHA+Phase+6+with+Test+User&details=RealEstate+Hub+Scheduled+Property+Visit%0AClient%3A+Test+User+%280300-1112233%29%0AAssigned+Agent%3A+Ahmed+Raza%0AProperty%3A+5+Marla+House+in+DHA+Phase+6+%28PROP-1000%29%0ADate%3A+Tomorrow+at+3%3A00+PM%0ANotes%3A+%0A&location=5+Marla+House+in+DHA+Phase+6&dates=20260907T150000Z%2F20260907T154500Z",
+  "status": "confirmed",
+  "created_at": "2026-09-06T14:48:08.540328+00:00"
+}

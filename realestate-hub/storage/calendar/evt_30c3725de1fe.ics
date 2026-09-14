@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//RealEstate Hub//LangGraph Agent//EN
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:evt_30c3725de1fe@realestatehub.pk
+DTSTAMP:20260906T060130Z
+DTSTART:20260907T150000Z
+DTEND:20260907T154500Z
+SUMMARY:Property Visit: 5 Marla House in DHA Phase 6 with Test User
+DESCRIPTION:RealEstate Hub Scheduled Property Visit\nClient: Test User (0300-1112233)\nAssigned Agent: Ahmed Raza\nProperty: 5 Marla House in DHA Phase 6 (PROP-1000)\nDate: Tomorrow at 3:00 PM\nNotes: \n
+LOCATION:5 Marla House in DHA Phase 6
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR

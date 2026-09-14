@@ -1,0 +1,19 @@
+{
+  "email_id": "eml_3bd4f10e5f5d",
+  "appointment_id": "",
+  "event_type": "booking",
+  "recipient": "umersahi005@gmail.com",
+  "customer_email": "",
+  "employee_name": "Ahmed Raza",
+  "client_name": "Test Client",
+  "client_phone": "0300-1234567",
+  "property_title": "Luxury Villa",
+  "property_id": "PROP-1000",
+  "date_str": "Tomorrow",
+  "time_str": "4:00 PM",
+  "subject": "[NEW VISIT] Luxury Villa on Tomorrow with Test Client",
+  "plain_text": "\u2728 New Property Visit Scheduled\n===================================\nAppointment ID: N/A (Save this ID to reschedule or cancel your visit)\nEmployee: Ahmed Raza (umersahi005@gmail.com)\nClient: Test Client (Phone: 0300-1234567)\nProperty: Luxury Villa (PROP-1000)\nDate & Time: Tomorrow at 4:00 PM\nRequirements: \nNotes: \nCalendar Link: \n",
+  "sent_at": "2026-09-06T14:48:08.727362+00:00",
+  "smtp_delivered": true,
+  "smtp_error": null
+}

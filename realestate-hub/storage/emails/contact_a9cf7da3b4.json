@@ -1,0 +1,15 @@
+{
+  "email_id": "contact_a9cf7da3b4",
+  "type": "contact_inquiry",
+  "name": "Test Client",
+  "email": "testclient@example.com",
+  "phone": "+923001234567",
+  "inquiry_type": "Buy Luxury Villa",
+  "city": "Islamabad",
+  "budget": "10 - 25 Crore",
+  "message": "Testing VIP inquiry dispatch to umersahi5p@gmail.com",
+  "recipient": "umersahi5p@gmail.com",
+  "sent_at": "2026-09-06T14:30:00.415877+00:00",
+  "smtp_delivered": true,
+  "smtp_error": null
+}

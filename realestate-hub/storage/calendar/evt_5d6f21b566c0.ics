@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//RealEstate Hub//LangGraph Agent//EN
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:evt_5d6f21b566c0@realestatehub.pk
+DTSTAMP:20260906T060113Z
+DTSTART:20270413T150000Z
+DTEND:20270413T154500Z
+SUMMARY:Property Visit: House in Lahore with Hamza Ali
+DESCRIPTION:RealEstate Hub Scheduled Property Visit\nClient: Hamza Ali (03008877665)\nAssigned Agent: Ahmed Raza\nProperty: House in Lahore (PROP-1000)\nDate: 2027-04-13 at 3:00 PM\nNotes: Scheduled visit for House in Lahore\n
+LOCATION:House in Lahore
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR

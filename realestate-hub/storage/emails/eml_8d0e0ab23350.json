@@ -1,0 +1,19 @@
+{
+  "email_id": "eml_8d0e0ab23350",
+  "appointment_id": "APT-5083",
+  "event_type": "booking",
+  "recipient": "umersahi005@gmail.com",
+  "customer_email": "hassan@example.com",
+  "employee_name": "Ahmed Raza",
+  "client_name": "Hassan Tariq",
+  "client_phone": "03219876543",
+  "property_title": "10 Marla Luxury Villa in DHA Phase 6",
+  "property_id": "PROP-1001",
+  "date_str": "Tomorrow",
+  "time_str": "4:00 PM",
+  "subject": "[APT-5083] [NEW VISIT] 10 Marla Luxury Villa in DHA Phase 6 on Tomorrow with Hassan Tariq",
+  "plain_text": "\u2728 New Property Visit Scheduled\n===================================\nAppointment ID: APT-5083 (Save this ID to reschedule or cancel your visit)\nEmployee: Ahmed Raza (umersahi005@gmail.com)\nClient: Hassan Tariq (Phone: 03219876543)\nProperty: 10 Marla Luxury Villa in DHA Phase 6 (PROP-1001)\nDate & Time: Tomorrow at 4:00 PM\nRequirements: Private Tour scheduled for 10 Marla Luxury Villa in DHA Phase 6\nNotes: Test appointment from modal | Client Email: hassan@example.com\nCalendar Link: https://calendar.google.com/calendar/render?action=TEMPLATE&text=Property+Visit%3A+10+Marla+Luxury+Villa+in+DHA+Phase+6+with+Hassan+Tariq&details=RealEstate+Hub+Scheduled+Property+Visit%0AClient%3A+Hassan+Tariq+%2803219876543%29%0AAssigned+Agent%3A+Ahmed+Raza%0AProperty%3A+10+Marla+Luxury+Villa+in+DHA+Phase+6+%28PROP-1001%29%0ADate%3A+Tomorrow+at+4%3A00+PM%0ANotes%3A+Test+appointment+from+modal+%7C+Client+Email%3A+hassan%40example.com%0A&location=10+Marla+Luxury+Villa+in+DHA+Phase+6&dates=20260907T160000Z%2F20260907T164500Z\n",
+  "sent_at": "2026-09-06T14:44:26.194632+00:00",
+  "smtp_delivered": true,
+  "smtp_error": null
+}

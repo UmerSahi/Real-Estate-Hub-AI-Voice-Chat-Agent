@@ -1,0 +1,19 @@
+{
+  "email_id": "eml_99f6e9698585",
+  "appointment_id": "APT-5083",
+  "event_type": "cancellation",
+  "recipient": "umersahi005@gmail.com",
+  "customer_email": "",
+  "employee_name": "Ahmed Raza",
+  "client_name": "Hassan Tariq",
+  "client_phone": "03219876543",
+  "property_title": "10 Marla Luxury Villa in DHA Phase 6",
+  "property_id": "PROP-1001",
+  "date_str": "Tomorrow",
+  "time_str": "4:00 PM",
+  "subject": "[APT-5083] [CANCELLED] Visit for 10 Marla Luxury Villa in DHA Phase 6 with Hassan Tariq",
+  "plain_text": "\u274c Appointment Cancelled\n===================================\nAppointment ID: APT-5083 (Save this ID to reschedule or cancel your visit)\nEmployee: Ahmed Raza (umersahi005@gmail.com)\nClient: Hassan Tariq (Phone: 03219876543)\nProperty: 10 Marla Luxury Villa in DHA Phase 6 (PROP-1001)\nDate & Time: Tomorrow at 4:00 PM\nRequirements: \nNotes: Client cancelled appointment APT-5083\nCalendar Link: \n",
+  "sent_at": "2026-09-06T14:49:16.769804+00:00",
+  "smtp_delivered": true,
+  "smtp_error": null
+}

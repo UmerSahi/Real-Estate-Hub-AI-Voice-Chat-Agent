@@ -1,0 +1,19 @@
+{
+  "email_id": "eml_230b1c9fb184",
+  "appointment_id": "APT-4617",
+  "event_type": "cancellation",
+  "recipient": "umersahi005@gmail.com",
+  "customer_email": "",
+  "employee_name": "Ahmed Raza",
+  "client_name": "Usman",
+  "client_phone": "0300-1234567",
+  "property_title": "RealEstate Hub Property Visit",
+  "property_id": "PROP-General",
+  "date_str": "Day after tomorrow",
+  "time_str": "2:00 PM",
+  "subject": "[APT-4617] [CANCELLED] Visit for RealEstate Hub Property Visit with Usman",
+  "plain_text": "\u274c Appointment Cancelled\n===================================\nAppointment ID: APT-4617 (Save this ID to reschedule or cancel your visit)\nEmployee: Ahmed Raza (umersahi005@gmail.com)\nClient: Usman (Phone: 0300-1234567)\nProperty: RealEstate Hub Property Visit (PROP-General)\nDate & Time: Day after tomorrow at 2:00 PM\nRequirements: \nNotes: Client cancelled appointment APT-4617\nCalendar Link: \n",
+  "sent_at": "2026-09-06T06:51:37.557064+00:00",
+  "smtp_delivered": true,
+  "smtp_error": null
+}

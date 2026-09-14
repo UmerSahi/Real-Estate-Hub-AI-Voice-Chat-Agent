@@ -1,0 +1,17 @@
+{
+  "email_id": "eml_6c188576cf79",
+  "event_type": "booking",
+  "recipient": "umersahi005@gmail.com",
+  "employee_name": "Sana Malik",
+  "client_name": "Zain",
+  "client_phone": "0300-1234567",
+  "property_title": "5 Marla House in DHA 11 Rahbar, Lahore, Punjab",
+  "property_id": "PROP-1242",
+  "date_str": "6 Dec",
+  "time_str": "5:00 PM",
+  "subject": "[NEW VISIT] 5 Marla House in DHA 11 Rahbar, Lahore, Punjab on 6 Dec with Zain",
+  "plain_text": "\u2728 New Property Visit Scheduled\n===================================\nEmployee: Sana Malik (umersahi005@gmail.com)\nClient: Zain (Phone: 0300-1234567)\nProperty: 5 Marla House in DHA 11 Rahbar, Lahore, Punjab (PROP-1242)\nDate & Time: 6 Dec at 5:00 PM\nRequirements: Visit scheduled for 5 Marla House in DHA 11 Rahbar, Lahore, Punjab\nNotes: CRM Appointment ID: appt_e4a999327b\nCalendar Link: https://calendar.google.com/calendar/render?action=TEMPLATE&text=Property+Visit%3A+5+Marla+House+in+DHA+11+Rahbar%2C+Lahore%2C+Punjab+with+Zain&details=RealEstate+Hub+Scheduled+Property+Visit%0AClient%3A+Zain+%280300-1234567%29%0AAssigned+Agent%3A+Sana+Malik%0AProperty%3A+5+Marla+House+in+DHA+11+Rahbar%2C+Lahore%2C+Punjab+%28PROP-1242%29%0ADate%3A+6+Dec+at+5%3A00+PM%0ANotes%3A+Scheduled+visit+for+5+Marla+House+in+DHA+11+Rahbar%2C+Lahore%2C+Punjab%0A&location=5+Marla+House+in+DHA+11+Rahbar%2C+Lahore%2C+Punjab&dates=20260904T170000Z%2F20260904T174500Z\n",
+  "sent_at": "2026-09-04T07:16:18.565263+00:00",
+  "smtp_delivered": true,
+  "smtp_error": null
+}

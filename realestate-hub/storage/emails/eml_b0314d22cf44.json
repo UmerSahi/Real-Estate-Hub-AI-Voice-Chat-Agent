@@ -1,0 +1,19 @@
+{
+  "email_id": "eml_b0314d22cf44",
+  "appointment_id": "APT-4617",
+  "event_type": "booking",
+  "recipient": "umersahi005@gmail.com",
+  "customer_email": "",
+  "employee_name": "Ahmed Raza",
+  "client_name": "Usman",
+  "client_phone": "0300-1234567",
+  "property_title": "RealEstate Hub Property Visit",
+  "property_id": "PROP-General",
+  "date_str": "Tomorrow",
+  "time_str": "5:30 PM",
+  "subject": "[APT-4617] [NEW VISIT] RealEstate Hub Property Visit on Tomorrow with Usman",
+  "plain_text": "\u2728 New Property Visit Scheduled\n===================================\nAppointment ID: APT-4617 (Save this ID to reschedule or cancel your visit)\nEmployee: Ahmed Raza (umersahi005@gmail.com)\nClient: Usman (Phone: 0300-1234567)\nProperty: RealEstate Hub Property Visit (PROP-General)\nDate & Time: Tomorrow at 5:30 PM\nRequirements: Visit scheduled for RealEstate Hub Property Visit\nNotes: CRM Appointment ID: APT-4617\nCalendar Link: https://calendar.google.com/calendar/render?action=TEMPLATE&text=Property+Visit%3A+RealEstate+Hub+Property+Visit+with+Usman&details=RealEstate+Hub+Scheduled+Property+Visit%0AClient%3A+Usman+%280300-1234567%29%0AAssigned+Agent%3A+Ahmed+Raza%0AProperty%3A+RealEstate+Hub+Property+Visit+%28PROP-General%29%0ADate%3A+Tomorrow+at+5%3A30+PM%0ANotes%3A+Scheduled+visit+for+RealEstate+Hub+Property+Visit%0A&location=RealEstate+Hub+Property+Visit&dates=20260907T173000Z%2F20260907T181500Z\n",
+  "sent_at": "2026-09-06T06:51:27.770879+00:00",
+  "smtp_delivered": true,
+  "smtp_error": null
+}

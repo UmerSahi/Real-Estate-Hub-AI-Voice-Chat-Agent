@@ -1,0 +1,19 @@
+{
+  "email_id": "eml_640bb24e18bd",
+  "appointment_id": "appt_test_e41f99",
+  "event_type": "cancellation",
+  "recipient": "umersahi005@gmail.com",
+  "customer_email": "",
+  "employee_name": "Ahmed Raza",
+  "client_name": "Valued Client",
+  "client_phone": "Not Provided",
+  "property_title": "5 Marla House",
+  "property_id": "PROP-1000",
+  "date_str": "2027-12-25",
+  "time_str": "1:00 PM",
+  "subject": "[appt_test_e41f99] [CANCELLED] Visit for 5 Marla House with Valued Client",
+  "plain_text": "\u274c Appointment Cancelled\n===================================\nAppointment ID: appt_test_e41f99 (Save this ID to reschedule or cancel your visit)\nEmployee: Ahmed Raza (umersahi005@gmail.com)\nClient: Valued Client (Phone: Not Provided)\nProperty: 5 Marla House (PROP-1000)\nDate & Time: 2027-12-25 at 1:00 PM\nRequirements: \nNotes: Client cancelled appointment appt_test_e41f99\nCalendar Link: \n",
+  "sent_at": "2026-09-06T14:34:01.720136+00:00",
+  "smtp_delivered": true,
+  "smtp_error": null
+}

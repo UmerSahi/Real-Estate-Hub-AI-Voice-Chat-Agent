@@ -1,0 +1,17 @@
+{
+  "email_id": "eml_b4aaf181eb5c",
+  "event_type": "booking",
+  "recipient": "umersahi005@gmail.com",
+  "employee_name": "Bilal Chaudhry",
+  "client_name": "Zain",
+  "client_phone": "0300-1234567",
+  "property_title": "10 Marla House in DHA Defence, Lahore, Punjab",
+  "property_id": "PROP-1111",
+  "date_str": "6 Dec",
+  "time_str": "5:00 PM",
+  "subject": "[NEW VISIT] 10 Marla House in DHA Defence, Lahore, Punjab on 6 Dec with Zain",
+  "plain_text": "\u2728 New Property Visit Scheduled\n===================================\nEmployee: Bilal Chaudhry (umersahi005@gmail.com)\nClient: Zain (Phone: 0300-1234567)\nProperty: 10 Marla House in DHA Defence, Lahore, Punjab (PROP-1111)\nDate & Time: 6 Dec at 5:00 PM\nRequirements: Visit scheduled for 10 Marla House in DHA Defence, Lahore, Punjab\nNotes: CRM Appointment ID: appt_05a493a7a5\nCalendar Link: https://calendar.google.com/calendar/render?action=TEMPLATE&text=Property+Visit%3A+10+Marla+House+in+DHA+Defence%2C+Lahore%2C+Punjab+with+Zain&details=RealEstate+Hub+Scheduled+Property+Visit%0AClient%3A+Zain+%280300-1234567%29%0AAssigned+Agent%3A+Bilal+Chaudhry%0AProperty%3A+10+Marla+House+in+DHA+Defence%2C+Lahore%2C+Punjab+%28PROP-1111%29%0ADate%3A+6+Dec+at+5%3A00+PM%0ANotes%3A+Scheduled+visit+for+10+Marla+House+in+DHA+Defence%2C+Lahore%2C+Punjab%0A&location=10+Marla+House+in+DHA+Defence%2C+Lahore%2C+Punjab&dates=20260904T170000Z%2F20260904T174500Z\n",
+  "sent_at": "2026-09-04T07:09:11.148989+00:00",
+  "smtp_delivered": true,
+  "smtp_error": null
+}

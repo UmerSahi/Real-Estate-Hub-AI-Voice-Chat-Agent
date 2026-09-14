@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//RealEstate Hub//LangGraph Agent//EN
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:evt_6113c616b3b1@realestatehub.pk
+DTSTAMP:20260904T071618Z
+DTSTART:20260904T170000Z
+DTEND:20260904T174500Z
+SUMMARY:Property Visit: 5 Marla House in DHA 11 Rahbar, Lahore, Punjab with Zain
+DESCRIPTION:RealEstate Hub Scheduled Property Visit\nClient: Zain (0300-1234567)\nAssigned Agent: Sana Malik\nProperty: 5 Marla House in DHA 11 Rahbar, Lahore, Punjab (PROP-1242)\nDate: 6 Dec at 5:00 PM\nNotes: Scheduled visit for 5 Marla House in DHA 11 Rahbar, Lahore, Punjab\n
+LOCATION:5 Marla House in DHA 11 Rahbar, Lahore, Punjab
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR

@@ -1,0 +1,15 @@
+{
+  "email_id": "contact_26c6d643c9",
+  "type": "contact_inquiry",
+  "name": "Ali Khan",
+  "email": "ali@example.com",
+  "phone": "03001234567",
+  "inquiry_type": "Villa",
+  "city": "Islamabad",
+  "budget": "3.5 Crore",
+  "message": "Interested in booking an inspection",
+  "recipient": "umersahi5p@gmail.com",
+  "sent_at": "2026-09-06T14:35:42.320361+00:00",
+  "smtp_delivered": true,
+  "smtp_error": null
+}

@@ -1,0 +1,19 @@
+{
+  "email_id": "eml_d3e910ac673f",
+  "appointment_id": "appt_test_14f55c",
+  "event_type": "reschedule",
+  "recipient": "umersahi005@gmail.com",
+  "customer_email": "",
+  "employee_name": "Ahmed Raza",
+  "client_name": "Valued Client",
+  "client_phone": "Not Provided",
+  "property_title": "5 Marla House",
+  "property_id": "PROP-1000",
+  "date_str": "2027-12-16",
+  "time_str": "1:00 PM",
+  "subject": "[appt_test_14f55c] [RESCHEDULED] Visit for 5 Marla House with Valued Client",
+  "plain_text": "\ud83d\uddd3\ufe0f Appointment Rescheduled\n===================================\nAppointment ID: appt_test_14f55c (Save this ID to reschedule or cancel your visit)\nEmployee: Ahmed Raza (umersahi005@gmail.com)\nClient: Valued Client (Phone: Not Provided)\nProperty: 5 Marla House (PROP-1000)\nDate & Time: 2027-12-16 at 1:00 PM\nRequirements: \nNotes: Appointment appt_test_14f55c rescheduled.\nCalendar Link: https://calendar.google.com/calendar/render?action=TEMPLATE&text=Rescheduled%3A+Visit+for+RealEstate+Hub+Property+with+Valued+Client&details=RESCHEDULED+Property+Visit%0AClient%3A+Valued+Client+%28Not+Provided%29%0AAgent%3A+Ahmed+Raza%0AProperty%3A+RealEstate+Hub+Property%0ANew+Date%3A+2027-12-16+at+1%3A00+PM%0ANotes%3A+Rescheduled+visit+for+5+Marla+House%0A&location=RealEstate+Hub+Property&dates=20271216T130000Z%2F20271216T134500Z\n",
+  "sent_at": "2026-09-06T14:47:59.495548+00:00",
+  "smtp_delivered": true,
+  "smtp_error": null
+}

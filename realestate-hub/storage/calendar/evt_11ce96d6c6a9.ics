@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//RealEstate Hub//LangGraph Agent//EN
+CALSCALE:GREGORIAN
+METHOD:REQUEST
+BEGIN:VEVENT
+UID:evt_11ce96d6c6a9@realestatehub.pk
+DTSTAMP:20260904T070910Z
+DTSTART:20260904T170000Z
+DTEND:20260904T174500Z
+SUMMARY:Property Visit: 10 Marla House in DHA Defence, Lahore, Punjab with Zain
+DESCRIPTION:RealEstate Hub Scheduled Property Visit\nClient: Zain (0300-1234567)\nAssigned Agent: Bilal Chaudhry\nProperty: 10 Marla House in DHA Defence, Lahore, Punjab (PROP-1111)\nDate: 6 Dec at 5:00 PM\nNotes: Scheduled visit for 10 Marla House in DHA Defence, Lahore, Punjab\n
+LOCATION:10 Marla House in DHA Defence, Lahore, Punjab
+STATUS:CONFIRMED
+END:VEVENT
+END:VCALENDAR

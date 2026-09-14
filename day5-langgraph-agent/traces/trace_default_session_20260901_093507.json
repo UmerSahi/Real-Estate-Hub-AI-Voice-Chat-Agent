@@ -1,0 +1,811 @@
+{
+  "session_id": "default_session",
+  "timestamp": "2026-09-01T04:35:07.320539+00:00",
+  "total_steps": 14,
+  "total_latency_ms": 11641.75,
+  "steps": [
+    {
+      "step_number": 1,
+      "node_name": "IntentDetectionNode",
+      "from_node": "START",
+      "timestamp": "2026-09-01T04:34:51.867643+00:00",
+      "intent": "greeting",
+      "elapsed_ms": 1.18,
+      "agent_reasoning": "Classified intent as 'booking'. Clarification needed: False.",
+      "input_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {
+          "name": "Hamza Ali",
+          "phone": "0300-8877665"
+        },
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": 8877665.0,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {
+          "name": "Hamza phone",
+          "phone": "03008877665"
+        },
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": [],
+        "final_response_snippet": ""
+      },
+      "tools_called": [],
+      "validation_checks": []
+    },
+    {
+      "step_number": 2,
+      "node_name": "BookingNode",
+      "from_node": "IntentDetectionNode",
+      "timestamp": "2026-09-01T04:34:51.869786+00:00",
+      "intent": "booking",
+      "elapsed_ms": 3191.76,
+      "agent_reasoning": "Successfully booked appointment appt_0671d34f2c with Calendar, CRM, and Email integration.",
+      "input_summary": {
+        "budget": 8877665.0,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {
+          "name": "Hamza phone",
+          "phone": "03008877665"
+        },
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": null,
+        "property_preferences": {},
+        "user_profile": {
+          "name": "Hamza phone",
+          "phone": "03008877665",
+          "lead_id": "lead_07ec8659b4"
+        },
+        "appointment_status": "scheduled",
+        "clarification_needed": false,
+        "validation_errors": [],
+        "final_response_snippet": "\ud83c\udf89 **Your Property Visit is Confirmed!**\n\n\ud83d\udcc5 **Date:** Tomorrow\n\u23f0 **Time:** 3 PM\n\ud83c\udfe1 **Property:** House in Lahore (`PROP-1000`)\n\ud83d\udc64 **Assigned Consultant:** Ahmed Raza\n\ud83c\udd94 **Booking Ref:*..."
+      },
+      "tools_called": [
+        {
+          "tool_name": "availability_checker_tool",
+          "input_params": {
+            "agent_name": "Ahmed Raza",
+            "date_str": "Tomorrow",
+            "time_str": "3 PM",
+            "property_id": "PROP-1000"
+          },
+          "result_summary": "{'available': True, 'reason': 'Slot on Tomorrow at 3 PM is open and confirmed available for Ahmed Raza.', 'alternative_slots': []}",
+          "status": "success",
+          "timestamp": "2026-09-01T04:34:52.014624+00:00"
+        },
+        {
+          "tool_name": "crm_tool",
+          "input_params": {
+            "action": "upsert_lead",
+            "client_name": "Hamza phone"
+          },
+          "result_summary": "{'lead_id': 'lead_07ec8659b4'}",
+          "status": "success",
+          "timestamp": "2026-09-01T04:34:52.056960+00:00"
+        },
+        {
+          "tool_name": "calendar_tool",
+          "input_params": {
+            "action": "create",
+            "date_str": "Tomorrow",
+            "time_str": "3 PM"
+          },
+          "result_summary": "{'event_id': 'evt_8b5b976bf696', 'client_name': 'Hamza phone', 'phone': '03008877665', 'employee': 'Ahmed Raza', 'property_title': 'House in Lahore', 'property_id': 'PROP-1000', 'date_str': 'Tomorrow', 'time_str': '3 PM', 'notes': 'Scheduled visit for House in Lahore', 'google_calendar_link': 'https",
+          "status": "success",
+          "timestamp": "2026-09-01T04:34:52.058957+00:00"
+        },
+        {
+          "tool_name": "crm_tool",
+          "input_params": {
+            "action": "log_appointment",
+            "lead_id": "lead_07ec8659b4"
+          },
+          "result_summary": "{'appointment_id': 'appt_0671d34f2c'}",
+          "status": "success",
+          "timestamp": "2026-09-01T04:34:52.108551+00:00"
+        },
+        {
+          "tool_name": "email_tool",
+          "input_params": {
+            "employee_name": "Ahmed Raza",
+            "event_type": "booking"
+          },
+          "result_summary": "{'email_id': 'eml_0d529f81203a', 'event_type': 'booking', 'recipient': 'ahmed.raza@realestatehub.pk', 'employee_name': 'Ahmed Raza', 'client_name': 'Hamza phone', 'client_phone': '03008877665', 'property_title': 'House in Lahore', 'property_id': 'PROP-1000', 'date_str': 'Tomorrow', 'time_str': '3 PM",
+          "status": "success",
+          "timestamp": "2026-09-01T04:34:55.057866+00:00"
+        }
+      ],
+      "validation_checks": [
+        {
+          "check_name": "Slot Availability Invariant",
+          "passed": true,
+          "details": "Slot verified open for Ahmed Raza on Tomorrow at 3 PM"
+        }
+      ]
+    },
+    {
+      "step_number": 3,
+      "node_name": "IntentDetectionNode",
+      "from_node": "START",
+      "timestamp": "2026-09-01T04:34:55.067536+00:00",
+      "intent": "greeting",
+      "elapsed_ms": 0.06,
+      "agent_reasoning": "Classified intent as 'greeting'. Clarification needed: False.",
+      "input_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": [],
+        "final_response_snippet": ""
+      },
+      "tools_called": [],
+      "validation_checks": []
+    },
+    {
+      "step_number": 4,
+      "node_name": "GreetingNode",
+      "from_node": "IntentDetectionNode",
+      "timestamp": "2026-09-01T04:34:55.068231+00:00",
+      "intent": "greeting",
+      "elapsed_ms": 0.04,
+      "agent_reasoning": "Provided welcoming onboarding message and set conversational direction.",
+      "input_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": null,
+        "property_preferences": {},
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": [],
+        "final_response_snippet": "Assalam-o-Alaikum & Welcome to RealEstate Hub! \ud83c\udfe1\nI am your AI Property Consultant. I can help you find verified houses, flats, or plots in Lahore, Islamabad, and Karachi, answer qu..."
+      },
+      "tools_called": [],
+      "validation_checks": []
+    },
+    {
+      "step_number": 5,
+      "node_name": "IntentDetectionNode",
+      "from_node": "START",
+      "timestamp": "2026-09-01T04:34:55.071647+00:00",
+      "intent": "greeting",
+      "elapsed_ms": 0.07,
+      "agent_reasoning": "Classified intent as 'rag'. Clarification needed: False.",
+      "input_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "Bahria Town",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": [],
+        "final_response_snippet": ""
+      },
+      "tools_called": [],
+      "validation_checks": []
+    },
+    {
+      "step_number": 6,
+      "node_name": "RAGNode",
+      "from_node": "IntentDetectionNode",
+      "timestamp": "2026-09-01T04:34:55.072797+00:00",
+      "intent": "rag",
+      "elapsed_ms": 2129.79,
+      "agent_reasoning": "Generated grounded answer from 0 verified KB chunks.",
+      "input_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "Bahria Town",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": null,
+        "property_preferences": {},
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": [],
+        "final_response_snippet": "I could not find verified records matching your specific question in our database. Our consultant can assist you directly with official society documentation."
+      },
+      "tools_called": [
+        {
+          "tool_name": "rag_search_tool",
+          "input_params": {
+            "query": "What are the amenities and payment plan in Bahria Town?"
+          },
+          "result_summary": "{'success': True, 'query': 'What are the amenities and payment plan in Bahria Town?', 'results': [], 'sources': [], 'count': 0}",
+          "status": "success",
+          "timestamp": "2026-09-01T04:34:55.214823+00:00"
+        }
+      ],
+      "validation_checks": []
+    },
+    {
+      "step_number": 7,
+      "node_name": "IntentDetectionNode",
+      "from_node": "START",
+      "timestamp": "2026-09-01T04:34:57.218505+00:00",
+      "intent": "greeting",
+      "elapsed_ms": 0.07,
+      "agent_reasoning": "Classified intent as 'recommendation'. Clarification needed: False.",
+      "input_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": 20000000.0,
+        "property_preferences": {
+          "city": "Lahore",
+          "locality": "",
+          "property_type": "House",
+          "purpose": "For Sale",
+          "area_marla": 5.0,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": [],
+        "final_response_snippet": ""
+      },
+      "tools_called": [],
+      "validation_checks": []
+    },
+    {
+      "step_number": 8,
+      "node_name": "RecommendationNode",
+      "from_node": "IntentDetectionNode",
+      "timestamp": "2026-09-01T04:34:57.219457+00:00",
+      "intent": "recommendation",
+      "elapsed_ms": 361.98,
+      "agent_reasoning": "Retrieved 5 verified properties without hallucinations.",
+      "input_summary": {
+        "budget": 20000000.0,
+        "property_preferences": {
+          "city": "Lahore",
+          "locality": "",
+          "property_type": "House",
+          "purpose": "For Sale",
+          "area_marla": 5.0,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": null,
+        "property_preferences": {},
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": [],
+        "final_response_snippet": "Here are the top **verified properties** in **Lahore** matching your budget of **PKR 20,000,000**:\n\n**1. PROP-1116** \u2014 *House* in Elite Town, Lahore, Punjab\n   \u2022 **Price:** PKR 30...."
+      },
+      "tools_called": [
+        {
+          "tool_name": "property_search_tool",
+          "input_params": {
+            "city": "Lahore",
+            "budget_max": 20000000.0,
+            "bedrooms": null,
+            "area_marla": 5.0,
+            "property_type": "House",
+            "purpose": "For Sale",
+            "locality_contains": ""
+          },
+          "result_summary": "{'success': True, 'properties': [{'property_id': 'PROP-1116', 'property_type': 'House', 'locality': 'Elite Town, Lahore, Punjab', 'city': 'Lahore', 'price': 3000000, 'area_marla': 5.0, 'bedrooms': 3, 'baths': 3, 'agent_id': 'AG-03', 'agent': 'Bilal Chaudhry', 'amenity_match': 0, 'price_per_marla': 6",
+          "status": "success",
+          "timestamp": "2026-09-01T04:34:57.281867+00:00"
+        }
+      ],
+      "validation_checks": [
+        {
+          "check_name": "Property Availability (PROP-1116)",
+          "passed": true,
+          "details": "Verified active in database. Locality: Elite Town, Lahore, Punjab, Price: PKR 3,000,000"
+        },
+        {
+          "check_name": "Property Availability (PROP-1161)",
+          "passed": true,
+          "details": "Verified active in database. Locality: Bahria Nasheman, Lahore, Punjab, Price: PKR 4,600,000"
+        },
+        {
+          "check_name": "Property Availability (PROP-1069)",
+          "passed": true,
+          "details": "Verified active in database. Locality: GT Road, Lahore, Punjab, Price: PKR 6,500,000"
+        },
+        {
+          "check_name": "Property Availability (PROP-1171)",
+          "passed": true,
+          "details": "Verified active in database. Locality: Lalazaar Garden, Lahore, Punjab, Price: PKR 7,500,000"
+        },
+        {
+          "check_name": "Property Availability (PROP-1026)",
+          "passed": true,
+          "details": "Verified active in database. Locality: Harbanspura Road, Lahore, Punjab, Price: PKR 8,000,000"
+        }
+      ]
+    },
+    {
+      "step_number": 9,
+      "node_name": "IntentDetectionNode",
+      "from_node": "START",
+      "timestamp": "2026-09-01T04:34:57.586151+00:00",
+      "intent": "greeting",
+      "elapsed_ms": 0.07,
+      "agent_reasoning": "Classified intent as 'rescheduling'. Clarification needed: False.",
+      "input_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "scheduled",
+        "clarification_needed": false,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "scheduled",
+        "clarification_needed": false,
+        "validation_errors": [],
+        "final_response_snippet": ""
+      },
+      "tools_called": [],
+      "validation_checks": []
+    },
+    {
+      "step_number": 10,
+      "node_name": "ReschedulingNode",
+      "from_node": "IntentDetectionNode",
+      "timestamp": "2026-09-01T04:34:57.586816+00:00",
+      "intent": "rescheduling",
+      "elapsed_ms": 2968.81,
+      "agent_reasoning": "Successfully rescheduled appointment in Calendar, CRM, and Email.",
+      "input_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "scheduled",
+        "clarification_needed": false,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": null,
+        "property_preferences": {},
+        "user_profile": {},
+        "appointment_status": "rescheduled",
+        "clarification_needed": false,
+        "validation_errors": [],
+        "final_response_snippet": "\ud83d\uddd3\ufe0f **Appointment Successfully Rescheduled!**\n\n\ud83d\udcc5 **New Date:** Tomorrow\n\u23f0 **New Time:** 4:00 PM\n\ud83c\udfe1 **Property:** 5 Marla House\n\ud83d\udc64 **Consultant:** Ahmed Raza\n\n\ud83d\udd17 [**Update Google Calend..."
+      },
+      "tools_called": [
+        {
+          "tool_name": "availability_checker_tool",
+          "input_params": {
+            "date_str": "Tomorrow",
+            "time_str": "4:00 PM"
+          },
+          "result_summary": "{'available': True, 'reason': 'Slot on Tomorrow at 4:00 PM is open and confirmed available for Ahmed Raza.', 'alternative_slots': []}",
+          "status": "success",
+          "timestamp": "2026-09-01T04:34:57.726841+00:00"
+        },
+        {
+          "tool_name": "calendar_tool",
+          "input_params": {
+            "action": "update",
+            "event_id": "evt_appt_test_99"
+          },
+          "result_summary": "{'event_id': 'evt_appt_test_99', 'client_name': 'Valued Client', 'phone': 'Not Provided', 'employee': 'Ahmed Raza', 'property_title': 'RealEstate Hub Property', 'property_id': 'PROP-General', 'notes': 'Rescheduled visit for 5 Marla House', 'date_str': 'Tomorrow', 'time_str': '4:00 PM', 'status': 're",
+          "status": "success",
+          "timestamp": "2026-09-01T04:34:57.728068+00:00"
+        },
+        {
+          "tool_name": "crm_tool",
+          "input_params": {
+            "action": "log_appointment",
+            "status": "rescheduled"
+          },
+          "result_summary": "{'appointment_id': 'appt_test_99'}",
+          "status": "success",
+          "timestamp": "2026-09-01T04:34:57.767833+00:00"
+        },
+        {
+          "tool_name": "email_tool",
+          "input_params": {
+            "event_type": "reschedule"
+          },
+          "result_summary": "{'email_id': 'eml_0362026309a2', 'event_type': 'reschedule', 'recipient': 'ahmed.raza@realestatehub.pk', 'employee_name': 'Ahmed Raza', 'client_name': 'Valued Client', 'client_phone': 'Not Provided', 'property_title': '5 Marla House', 'property_id': 'PROP-1000', 'date_str': 'Tomorrow', 'time_str': '",
+          "status": "success",
+          "timestamp": "2026-09-01T04:35:00.555178+00:00"
+        }
+      ],
+      "validation_checks": []
+    },
+    {
+      "step_number": 11,
+      "node_name": "IntentDetectionNode",
+      "from_node": "ReschedulingNode",
+      "timestamp": "2026-09-01T04:35:00.617059+00:00",
+      "intent": "rescheduling",
+      "elapsed_ms": 0.05,
+      "agent_reasoning": "Classified intent as 'cancellation'. Clarification needed: False.",
+      "input_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "rescheduled",
+        "clarification_needed": false,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "rescheduled",
+        "clarification_needed": false,
+        "validation_errors": [],
+        "final_response_snippet": ""
+      },
+      "tools_called": [],
+      "validation_checks": []
+    },
+    {
+      "step_number": 12,
+      "node_name": "CancellationNode",
+      "from_node": "IntentDetectionNode",
+      "timestamp": "2026-09-01T04:35:00.618524+00:00",
+      "intent": "cancellation",
+      "elapsed_ms": 2987.75,
+      "agent_reasoning": "Successfully processed cancellation across Calendar, CRM, and Email.",
+      "input_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "rescheduled",
+        "clarification_needed": false,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": null,
+        "property_preferences": {},
+        "user_profile": {},
+        "appointment_status": "cancelled",
+        "clarification_needed": false,
+        "validation_errors": [],
+        "final_response_snippet": "\u274c **Your appointment for 5 Marla House has been cancelled.**\n\nWe have updated our schedule and notified consultant **Ahmed Raza**.\nPlease let us know whenever you wish to schedule ..."
+      },
+      "tools_called": [
+        {
+          "tool_name": "calendar_tool",
+          "input_params": {
+            "action": "cancel",
+            "event_id": "evt_appt_test_99"
+          },
+          "result_summary": "{'status': 'cancelled'}",
+          "status": "success",
+          "timestamp": "2026-09-01T04:35:00.619493+00:00"
+        },
+        {
+          "tool_name": "crm_tool",
+          "input_params": {
+            "action": "log_appointment",
+            "status": "cancelled"
+          },
+          "result_summary": "{'appointment_id': 'appt_test_99'}",
+          "status": "success",
+          "timestamp": "2026-09-01T04:35:00.673066+00:00"
+        },
+        {
+          "tool_name": "email_tool",
+          "input_params": {
+            "event_type": "cancellation"
+          },
+          "result_summary": "{'email_id': 'eml_a50cd018ef59', 'event_type': 'cancellation', 'recipient': 'ahmed.raza@realestatehub.pk', 'employee_name': 'Ahmed Raza', 'client_name': 'Valued Client', 'client_phone': 'Not Provided', 'property_title': '5 Marla House', 'property_id': 'PROP-1000', 'date_str': 'Tomorrow', 'time_str':",
+          "status": "success",
+          "timestamp": "2026-09-01T04:35:03.605973+00:00"
+        }
+      ],
+      "validation_checks": []
+    },
+    {
+      "step_number": 13,
+      "node_name": "IntentDetectionNode",
+      "from_node": "START",
+      "timestamp": "2026-09-01T04:35:07.318007+00:00",
+      "intent": "greeting",
+      "elapsed_ms": 0.07,
+      "agent_reasoning": "Classified intent as 'recommendation'. Clarification needed: True.",
+      "input_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "House",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": true,
+        "validation_errors": [],
+        "final_response_snippet": ""
+      },
+      "tools_called": [],
+      "validation_checks": []
+    },
+    {
+      "step_number": 14,
+      "node_name": "ClarificationNode",
+      "from_node": "IntentDetectionNode",
+      "timestamp": "2026-09-01T04:35:07.318755+00:00",
+      "intent": "recommendation",
+      "elapsed_ms": 0.05,
+      "agent_reasoning": "Requested targeted clarification from user to prevent guessing or unverified assumptions.",
+      "input_summary": {
+        "budget": null,
+        "property_preferences": {
+          "city": "",
+          "locality": "",
+          "property_type": "House",
+          "purpose": "For Sale",
+          "area_marla": null,
+          "bedrooms": null,
+          "baths": null,
+          "desired_amenities": [],
+          "investment_goal": false
+        },
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": true,
+        "validation_errors": []
+      },
+      "output_summary": {
+        "budget": null,
+        "property_preferences": {},
+        "user_profile": {},
+        "appointment_status": "none",
+        "clarification_needed": false,
+        "validation_errors": [],
+        "final_response_snippet": "I'd love to help you find the best property! Which city are you looking in (Lahore, Islamabad, or Karachi), and what is your approximate budget?"
+      },
+      "tools_called": [],
+      "validation_checks": [
+        {
+          "check_name": "Clarification Safeguard",
+          "passed": true,
+          "details": "Prevented hallucinated/guessed state by requesting user clarification: 'I'd love to help you find the best property! Which city are you looking in (Lahore, Islamabad, or Karachi), and what is your approximate budget?'"
+        }
+      ]
+    }
+  ]
+}
