@@ -12,19 +12,10 @@ services:
       - key: GOOGLE_API_KEY
         sync: false
       - key: VAPI_PRIVATE_KEY
-        sync: false
+        value: 7b7f8428-c731-43c8-b2fa-6c6ceb847cc4
       - key: VAPI_PUBLIC_KEY
-        sync: false
+        value: 9efb9bb5-3fcf-439e-becf-f98742ab98d4
       - key: VAPI_ASSISTANT_ID
-        sync: false
-      - key: DATABASE_URL
-        fromDatabase:
-          name: realestate-db
-          property: connectionString
-
-databases:
-  - name: realestate-db
-    plan: free
-    region: oregon
-    databaseName: realestate_kb
-    user: postgres
+        value: 5b8807b3-1e6d-4a38-b1ba-25715f349899
+      - key: DB_BACKEND
+        value: sqlite

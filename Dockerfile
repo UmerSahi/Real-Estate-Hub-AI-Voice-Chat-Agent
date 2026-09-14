@@ -1,4 +1,4 @@
-# Multi-stage production Dockerfile for 24/7 Cloud Deployment (Render, Railway, Fly.io, etc.)
+# Multi-stage production Dockerfile for 24/7 Cloud Deployment on Render.com
 
 # ---------------------------------------------------------------------------
 # Stage 1: Build React Frontend
@@ -37,13 +37,10 @@ COPY realestate-hub/ ./realestate-hub/
 # Copy compiled frontend from builder
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
-# Expose dynamic cloud port
-ENV PORT=8000
 ENV HOST=0.0.0.0
 ENV PYTHONPATH="/app/day5-langgraph-agent:/app/realestate-hub/backend:${PYTHONPATH}"
 
-EXPOSE 8000
-
 WORKDIR /app/day5-langgraph-agent
 
-CMD ["sh", "-c", "uvicorn vapi_server:app --host 0.0.0.0 --port ${PORT:-8000}"]
+# Render automatically sets $PORT (typically 10000)
+CMD ["sh", "-c", "uvicorn vapi_server:app --host 0.0.0.0 --port ${PORT:-10000}"]
