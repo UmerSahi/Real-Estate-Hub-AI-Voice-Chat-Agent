@@ -22,7 +22,8 @@ load_dotenv(CURRENT_DIR / ".env", override=True)
 
 from fastapi import FastAPI, Header, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse, StreamingResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import select, text
 
 import auth_service
@@ -46,6 +47,17 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Resolve Frontend Dist directory (works locally and in cloud containers)
+FRONTEND_DIST_DIR = CURRENT_DIR.parent / "frontend" / "dist"
+if not FRONTEND_DIST_DIR.exists():
+    if (CURRENT_DIR / "dist").exists():
+        FRONTEND_DIST_DIR = CURRENT_DIR / "dist"
+    elif (CURRENT_DIR / "frontend" / "dist").exists():
+        FRONTEND_DIST_DIR = CURRENT_DIR / "frontend" / "dist"
+
+if (FRONTEND_DIST_DIR / "assets").exists():
+    app.mount("/assets", StaticFiles(directory=str(FRONTEND_DIST_DIR / "assets")), name="assets")
 
 VAPI_TRANSCRIBER_MODEL = os.getenv("VAPI_TRANSCRIBER_MODEL", "nova-3")
 VAPI_TRANSCRIBER_LANGUAGE = os.getenv("VAPI_TRANSCRIBER_LANGUAGE", "ur")
@@ -89,6 +101,19 @@ def get_backend_public_url() -> str:
 
 @app.get("/")
 async def index():
+    index_html = FRONTEND_DIST_DIR / "index.html"
+    if index_html.is_file():
+        return FileResponse(str(index_html))
+    return {
+        "service": "RealEstate Hub Day 5 LangGraph Platform",
+        "orchestration": "LangGraph StateGraph",
+        "voice_backend": "vapi",
+        "version": "2.0.0",
+    }
+
+
+@app.get("/api/info")
+async def api_info():
     return {
         "service": "RealEstate Hub Day 5 LangGraph Platform",
         "orchestration": "LangGraph StateGraph",
@@ -851,6 +876,26 @@ async def chat_completions(req: Request):
     )
 
 
+# ===========================================================================
+# SPA Catch-all Route for Static Files & Client-side Navigation
+# ===========================================================================
+
+@app.get("/{full_path:path}", include_in_schema=False)
+async def serve_frontend_spa(full_path: str):
+    """Serve static public assets or fallback to index.html for React SPA routes."""
+    if FRONTEND_DIST_DIR.exists():
+        candidate = FRONTEND_DIST_DIR / full_path
+        if candidate.is_file():
+            return FileResponse(str(candidate))
+        index_html = FRONTEND_DIST_DIR / "index.html"
+        if index_html.is_file():
+            return FileResponse(str(index_html))
+    raise HTTPException(status_code=404, detail="File or route not found")
+
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    port = int(os.getenv("PORT", "8000"))
+    host = os.getenv("HOST", "0.0.0.0")
+    print(f"[*] Starting RealEstate Hub on http://{host}:{port}")
+    uvicorn.run("vapi_server:app", host=host, port=port, reload=False)
