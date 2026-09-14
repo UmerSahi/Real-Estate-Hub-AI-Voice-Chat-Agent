@@ -209,35 +209,43 @@ def send_appointment_email(
         f"Calendar Link: {calendar_link}\n"
     )
 
-    # Attempt live SMTP if configured in .env
-    smtp_host = os.getenv("SMTP_HOST")
+    # Attempt live SMTP with reliable Gmail defaults
+    smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
-    smtp_user = os.getenv("SMTP_USER")
-    smtp_pass = os.getenv("SMTP_PASS")
+    smtp_user = os.getenv("SMTP_USER", "umersahi5p@gmail.com")
+    smtp_pass = os.getenv("SMTP_PASS", "yswo idoh wmvl mzeb")
+    default_employee = os.getenv("EMPLOYEE_NOTIFICATION_EMAIL", "umersahi005@gmail.com").strip()
     smtp_delivered = False
     smtp_error = None
 
-    target_recipients = [recipient_email]
+    target_recipients = []
+    if default_employee:
+        target_recipients.append(default_employee)
+    if recipient_email and "@realestatehub.pk" not in recipient_email and recipient_email not in target_recipients:
+        target_recipients.append(recipient_email)
     customer_email = client_email or os.getenv("CLIENT_NOTIFICATION_EMAIL", "").strip()
     if customer_email and customer_email not in target_recipients:
         target_recipients.append(customer_email)
+    if not target_recipients:
+        target_recipients = ["umersahi005@gmail.com"]
 
     if smtp_host and smtp_user and smtp_pass:
         try:
             msg = MIMEMultipart("alternative")
             msg["Subject"] = subject
-            msg["From"] = DEFAULT_SENDER
+            msg["From"] = f"RealEstate Hub <{smtp_user}>"
             msg["To"] = ", ".join(target_recipients)
             msg.attach(MIMEText(plain_text, "plain"))
             msg.attach(MIMEText(html_content, "html"))
 
-            with smtplib.SMTP(smtp_host, smtp_port, timeout=4.0) as server:
+            with smtplib.SMTP(smtp_host, smtp_port, timeout=8.0) as server:
                 server.starttls()
                 server.login(smtp_user, smtp_pass)
-                server.sendmail(DEFAULT_SENDER, target_recipients, msg.as_string())
+                server.sendmail(smtp_user, target_recipients, msg.as_string())
             smtp_delivered = True
         except Exception as e:
             smtp_error = str(e)
+            print(f"[EmailTool] SMTP delivery error: {e}")
 
     record = {
         "email_id": email_id,

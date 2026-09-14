@@ -193,3 +193,18 @@
 {"text": "kharedna", "intent": "recommendation", "session_id": "web-session-h8tklyyo", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T10:39:42.046373+00:00"}
 {"text": "5 Marla in DHA Lahore under 2 Crore", "intent": "recommendation", "session_id": "web-session-h8tklyyo", "clarification_needed": false, "source": "rule_engine", "timestamp": "2026-09-14T10:39:46.317747+00:00"}
 {"text": "اب ایک مسئلہ ہی گھر دے رہا ہوں", "intent": "recommendation", "session_id": "01a09f80-d79e-7aa7-b8c6-0fb180da4e11", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T10:40:55.258150+00:00"}
+{"text": "mein ghar dekh rha hun lahore mein", "intent": "recommendation", "session_id": "web-session-tvauz66i", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T11:05:35.811690+00:00"}
+{"text": "kharedna", "intent": "recommendation", "session_id": "web-session-tvauz66i", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T11:06:31.404236+00:00"}
+{"text": "5 Marla in DHA Lahore under 2 Crore", "intent": "recommendation", "session_id": "web-session-tvauz66i", "clarification_needed": false, "source": "rule_engine", "timestamp": "2026-09-14T11:06:39.079386+00:00"}
+{"text": "option 1 ky liye appointment schedule krdo", "intent": "booking", "session_id": "default_session", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T12:33:53.414400+00:00"}
+{"text": "mujhy list mein sy option 1 pasand aya ha meri appointment book kr do", "intent": "booking", "session_id": "default_session", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T12:33:53.415374+00:00"}
+{"text": "option 1 ky liye appointment schedule krdo", "intent": "booking", "session_id": "default_session", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T12:34:07.996133+00:00"}
+{"text": "option 1 ky liye appointment schedule krdo", "intent": "booking", "session_id": "default_session", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T12:35:39.763687+00:00"}
+{"text": "mujhy list mein sy option 1 pasand aya ha meri appointment book kr do", "intent": "booking", "session_id": "default_session", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T12:35:39.764199+00:00"}
+{"text": "appointment schedule krdo", "intent": "booking", "session_id": "default_session", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T12:35:39.764720+00:00"}
+{"text": "visit schedule krdo", "intent": "booking", "session_id": "default_session", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T12:35:39.765269+00:00"}
+{"text": "option 1 visit book krdo", "intent": "booking", "session_id": "default_session", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T12:35:39.766397+00:00"}
+{"text": "option 1 book kardo", "intent": "booking", "session_id": "default_session", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T12:35:39.766912+00:00"}
+{"text": "1st option book kr do", "intent": "booking", "session_id": "default_session", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T12:35:39.767992+00:00"}
+{"text": "schedule appointment for option 1", "intent": "booking", "session_id": "default_session", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T12:35:39.768566+00:00"}
+{"text": "appointment schedule", "intent": "booking", "session_id": "default_session", "clarification_needed": true, "source": "rule_engine", "timestamp": "2026-09-14T12:35:39.769070+00:00"}

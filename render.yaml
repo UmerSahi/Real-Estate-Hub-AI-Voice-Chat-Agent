@@ -19,3 +19,13 @@ services:
         value: 5b8807b3-1e6d-4a38-b1ba-25715f349899
       - key: DB_BACKEND
         value: sqlite
+      - key: SMTP_HOST
+        value: smtp.gmail.com
+      - key: SMTP_PORT
+        value: 587
+      - key: SMTP_USER
+        value: umersahi5p@gmail.com
+      - key: SMTP_PASS
+        value: yswo idoh wmvl mzeb
+      - key: EMPLOYEE_NOTIFICATION_EMAIL
+        value: umersahi005@gmail.com

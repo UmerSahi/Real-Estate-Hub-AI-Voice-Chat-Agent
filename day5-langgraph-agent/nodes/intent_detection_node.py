@@ -106,13 +106,26 @@ def _is_off_topic_query(text: str) -> bool:
     if not t:
         return False
 
+    # Never treat queries with explicit real estate terms or booking terms as off-topic
+    booking_and_property_keywords = (
+        "appointment", "schedule", "visit", "booking", "book", "option", "options",
+        "ghar", "house", "flat", "apartment", "plot", "marla", "kanal", "crore", "lakh",
+        "dha", "bahria", "lahore", "islamabad", "rawalpindi", "price", "budget", "property",
+        "وزٹ", "اپوائنٹمنٹ", "شیڈول", "شیڈیول", "گھر", "فلیٹ", "پلاٹ", "پسند", "آپشن"
+    )
+    if any(k in t for k in booking_and_property_keywords):
+        # Only prompt injection or explicit programming code overrides
+        severe_jailbreak = ("system prompt", "jailbreak", "ignore previous instructions", "write python code")
+        if not any(k in t for k in severe_jailbreak):
+            return False
+
     for cue in OFF_TOPIC_CUES:
-        if cue in t:
-            if cue in ("code", "match"):
-                if re.search(rf"\b{cue}\b", t):
-                    return True
-            else:
+        # Use regex word boundaries for short cues to prevent false positives (e.g. "option" matching "pti")
+        if len(cue) <= 4:
+            if re.search(rf"\b{re.escape(cue)}\b", t):
                 return True
+        elif cue in t:
+            return True
 
     def_cues = ("definition", "ڈیفینیشن", "define", "تعریف", "meaning", "matlab kya", "کا مطلب", "kya hota hai", "کیا ہوتا ہے")
     if any(dc in t for dc in def_cues):
@@ -611,6 +624,11 @@ def _extract_entities(text: str, state: AgentState) -> Dict[str, Any]:
     if m_phone:
         extracted["phone"] = m_phone.group(1).replace("-", "").replace(" ", "")
 
+    # 10b. Email address
+    m_email = re.search(r"\b([A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,})\b", text)
+    if m_email:
+        extracted["email"] = m_email.group(1).lower()
+
     # 11. Client Name
     if any(k in t for k in ("mera naam", "meri naam", "my name is", "this is", "naam hai", "naam he", "میرا نام", "نام ہے", "کا ذہن", "کاظم", "عمر", "عامر")):
         name_extracted = _extract_client_name(text)
@@ -815,6 +833,8 @@ def intent_detection_node(state: AgentState) -> Dict[str, Any]:
         profile["name"] = entities["name"]
     if "phone" in entities:
         profile["phone"] = entities["phone"]
+    if "email" in entities:
+        profile["email"] = entities["email"]
 
     # 4. Update Budget
     budget = entities.get("budget", state.get("budget"))
