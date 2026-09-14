@@ -43,7 +43,7 @@ TRACES_DIR = AGENT_DIR / "traces"
 TRACES_DIR.mkdir(parents=True, exist_ok=True)
 STORAGE_DIR.mkdir(parents=True, exist_ok=True)
 
-DB_BACKEND = os.getenv("DB_BACKEND", "postgres").strip().lower()
+DB_BACKEND = os.getenv("DB_BACKEND", "sqlite").strip().lower()
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 GEMINI_EMBEDDING_MODEL = os.getenv("GEMINI_EMBEDDING_MODEL", "gemini-embedding-001").strip()
 GEMINI_LLM_MODEL = os.getenv("GEMINI_LLM_MODEL", "gemini-3.5-flash-lite").strip()
@@ -55,25 +55,50 @@ SQLITE_PATH = DB_DIR / os.getenv("SQLITE_DB", "realestate_kb.db")
 
 
 def get_engine():
-    """Return SQLAlchemy engine for Postgres or SQLite."""
+    """Return SQLAlchemy engine for Postgres, DATABASE_URL, or SQLite fallback."""
+    database_url = os.getenv("DATABASE_URL", "").strip()
+    if database_url:
+        if database_url.startswith("postgres://"):
+            database_url = database_url.replace("postgres://", "postgresql://", 1)
+        try:
+            from sqlalchemy import text
+            eng = create_engine(database_url, pool_pre_ping=True, connect_args={"connect_timeout": 3})
+            with eng.connect() as conn:
+                conn.execute(text("SELECT 1"))
+            return eng
+        except Exception as e:
+            print(f"Warning: DATABASE_URL connection failed: {e}. Falling back to SQLite.")
+
     if DB_BACKEND == "postgres":
         host = os.getenv("PG_HOST", "localhost")
         port = os.getenv("PG_PORT", "5432")
         db = os.getenv("PG_DB", "realestate_kb")
         user = os.getenv("PG_USER", "postgres")
         password = os.getenv("PG_PASSWORD", "")
-        from sqlalchemy.engine import URL
-        url = URL.create(
-            "postgresql+psycopg2",
-            username=user,
-            password=password,
-            host=host,
-            port=int(port),
-            database=db,
-        )
-        return create_engine(url, pool_pre_ping=True)
+        try:
+            from sqlalchemy.engine import URL
+            from sqlalchemy import text
+            url = URL.create(
+                "postgresql+psycopg2",
+                username=user,
+                password=password,
+                host=host,
+                port=int(port),
+                database=db,
+            )
+            eng = create_engine(url, pool_pre_ping=True, connect_args={"connect_timeout": 2})
+            with eng.connect() as conn:
+                conn.execute(text("SELECT 1"))
+            return eng
+        except Exception as e:
+            print(f"Warning: Postgres connection failed ({e}). Falling back to SQLite.")
 
-    return create_engine(f"sqlite:///{SQLITE_PATH}", pool_pre_ping=True)
+    sqlite_file = SQLITE_PATH
+    if not sqlite_file.exists():
+        fallback_path = WORKSPACE_ROOT.parent / "realestate-hub" / "data" / "db" / "realestate_kb.db"
+        if fallback_path.exists():
+            sqlite_file = fallback_path
+    return create_engine(f"sqlite:///{sqlite_file}", pool_pre_ping=True)
 
 
 def get_llm(temperature: float = 0.1, model_name: str | None = None):
