@@ -10,3 +10,7 @@ day5-langgraph-agent/.env
 .vercel/
 .DS_Store
 Thumbs.db
+.pytest_cache/
+day5-langgraph-agent/traces/
+realestate-hub/storage/calendar/
+realestate-hub/storage/emails/

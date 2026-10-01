@@ -24,6 +24,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     gcc \
     libpq-dev \
     curl \
+    libgomp1 \
     && rm -rf /var/lib/apt/lists/*
 
 # Install python dependencies
@@ -33,12 +34,13 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy backend application and database
 COPY day5-langgraph-agent/ ./day5-langgraph-agent/
 COPY realestate-hub/ ./realestate-hub/
+COPY "Week 8/" "./Week 8/"
 
 # Copy compiled frontend from builder
 COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
 
 ENV HOST=0.0.0.0
-ENV PYTHONPATH="/app/day5-langgraph-agent:/app/realestate-hub/backend:${PYTHONPATH}"
+ENV PYTHONPATH="/app/day5-langgraph-agent:/app/realestate-hub/backend:/app/Week 8/Day 4:${PYTHONPATH}"
 
 WORKDIR /app/day5-langgraph-agent
 
