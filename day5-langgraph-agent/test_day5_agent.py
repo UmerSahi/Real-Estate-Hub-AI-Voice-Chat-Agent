@@ -245,6 +245,26 @@ class TestDay5LangGraphAgent(unittest.TestCase):
         self.assertIn("crore", reply.lower())
         self.assertTrue(any(word in reply.lower() for word in ["takhmeena", "market", "value", "qeemat"]))
 
+    def test_task4_seller_multi_turn_valuation_flow(self):
+        """Verify conversational flow: 'Ghar bechna chahta hoon' -> details -> valuation without asking for budget."""
+        turn1 = run_agent_turn(
+            "گھر بیچنا چاہتا ہوں",
+            session_id="test_seller_flow_verify",
+        )
+        self.assertEqual(turn1.get("intent"), "valuation")
+        self.assertEqual(turn1.get("last_node"), "ClarificationNode")
+        self.assertIn("valuation", turn1.get("final_response", "").lower())
+
+        turn2 = run_agent_turn(
+            "لاہور میں ہے دس مرلے کا ہے اور squaty ڈی ایچ اے ہے",
+            current_state=turn1,
+            session_id="test_seller_flow_verify",
+        )
+        self.assertEqual(turn2.get("intent"), "valuation")
+        self.assertEqual(turn2.get("last_node"), "ValuationNode")
+        self.assertNotIn("budget", turn2.get("final_response", "").lower())
+        self.assertIn("crore", turn2.get("final_response", "").lower())
+
     def test_task4_post_call_lead_scoring_and_hot_lead_email_alert(self):
         """Verify post-call lead scoring evaluates conversion probability and flags hot leads."""
         from tools.ml_tools import score_voice_call_lead

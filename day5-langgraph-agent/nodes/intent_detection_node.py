@@ -534,15 +534,24 @@ def _extract_entities(text: str, state: AgentState) -> Dict[str, Any]:
             extracted["property_type"] = label
             break
 
-    # 3. Purpose (Buy / Rent)
+    # 3. Purpose (Sell / Buy / Rent)
+    sell_cues = (
+        "sell", "bechna", "bechni", "bechnay", "bechnaa", "sale karna", "sale krna",
+        "bechna chahta", "bechna chahta hun", "bechna chahta hoon", "bechni chahti", "bechna chahte",
+        "bechna hai", "bechni hai", "sale krna chahta", "sale karna chahta", "sell karna", "sell krna",
+        "بیچنا", "بیچنا چاہتا ہوں", "بیچنا چاہتی ہوں", "بیچنی ہے", "بیچنا ہے", "فروخت", "فروخت کرنا",
+        "سیل کرنا ہے", "سیل کرنا چاہتا ہوں"
+    )
     rent_cues = ("rent", "rental", "kiraya", "kiraye", "rent par", "rent pe", "rent pr", "کرایہ", "کرائے", "رینٹ", "کرایے", "kiraye par", "kiraye pe")
     buy_cues = (
-        "buy", "purchase", "sale", "for sale", "kharid", "khareed", "khared", "kharedna",
+        "buy", "purchase", "kharid", "khareed", "khared", "kharedna",
         "khareedna", "kharidna", "khareedne", "kharedne", "kharidne", "khareedni", "kharedni", "kharidni",
         "lena chahta", "lena hai", "lene hain", "khareedna chahta", "kharedna chahta", "kharidna chahta",
-        "خرید", "خریدنا", "بیچنا", "خریدنے", "بائے", "سیل", "خریدوں"
+        "خرید", "خریدنا", "خریدنے", "بائے", "خریدوں"
     )
-    if any(x in t for x in rent_cues):
+    if any(x in t for x in sell_cues):
+        extracted["purpose"] = "sell"
+    elif any(x in t for x in rent_cues):
         extracted["purpose"] = "For Rent"
     elif any(x in t for x in buy_cues):
         extracted["purpose"] = "For Sale"
@@ -607,7 +616,7 @@ def _extract_entities(text: str, state: AgentState) -> Dict[str, Any]:
         if loc in t:
             clean_loc = loc
             if clean_loc in ("ڈی ایچ اے", "پی ایچ اے", "ٹی ایچ ایم", "ڈیفنس", "defense", "defence", "dha"):
-                clean_loc = "DHA"
+                clean_loc = "DHA Phase 6"
             elif clean_loc in ("بحریہ ٹاؤن", "بحریہ"):
                 clean_loc = "Bahria Town"
             elif clean_loc == "گلبرگ":
@@ -616,7 +625,13 @@ def _extract_entities(text: str, state: AgentState) -> Dict[str, Any]:
                 clean_loc = "Johar Town"
             elif clean_loc == "ماڈل ٹاؤن":
                 clean_loc = "Model Town"
-            extracted["locality"] = clean_loc.title()
+            elif clean_loc == "dha phase 6":
+                clean_loc = "DHA Phase 6"
+            elif clean_loc == "dha phase 5":
+                clean_loc = "DHA Phase 5"
+            else:
+                clean_loc = clean_loc.title()
+            extracted["locality"] = clean_loc
             break
 
     # 10. Phone number
@@ -681,8 +696,18 @@ def _classify_intent(text: str, state: AgentState, extracted: Dict[str, Any]) ->
     """Accurately classify user intent."""
     t = text.lower().strip()
     appt = state.get("appointment_status", {})
-
     last_clarif = state.get("last_clarification_type", "")
+    prev_intent = state.get("intent", "")
+    prefs = state.get("property_preferences", {})
+
+    # Check if we are actively in a valuation clarification flow or user is selling
+    is_valuation_context = (
+        prev_intent == "valuation"
+        or (isinstance(last_clarif, str) and last_clarif.startswith("valuation"))
+        or prefs.get("purpose") in ("sell", "bechna")
+        or extracted.get("purpose") in ("sell", "bechna")
+    )
+
     if last_clarif == "appointment_id" or appt.get("id_asked_flag"):
         if appt.get("pending_action") == "cancellation" or appt.get("status") == "pending_cancellation":
             return "cancellation"
@@ -739,13 +764,6 @@ def _classify_intent(text: str, state: AgentState, extracted: Dict[str, Any]) ->
         return "booking"
 
     # 6. Email request cues
-    # FIX (was too narrow — matched almost nothing real callers say):
-    # only "email me"/"send email"/"mail details" matched before, so a
-    # normal request like "email bhej dein" or "mujhe email kar dein" fell
-    # through to the RAG/recommendation fallback instead. Also removed the
-    # old bare "میل" cue — that's ambiguous with "mile" (the distance unit)
-    # in Urdu and was a false-positive risk (e.g. "kitni door hai" style
-    # questions), replaced with the actual common Urdu spelling "ایمیل".
     email_cues = (
         "email", "e-mail", "gmail",
         "email me", "send email", "mail details", "email bhej", "bhej email",
@@ -762,8 +780,12 @@ def _classify_intent(text: str, state: AgentState, extracted: Dict[str, Any]) ->
         "kitne me bikega", "mera ghar kitne ka", "mera ghar kitne", "ghar kitne ka bikega", "plot kitne ka bikega",
         "flat kitne ka bikega", "kitne ka sell hoga", "kitne mein sell hoga", "valuation", "worth",
         "market value", "market price", "price prediction", "qeemat kitni", "kitni qeemat", "andazan qeemat",
-        "kitne ka hoga", "kitne ka sale hoga", "bechna hai", "bechnay", "bechni",
-        "بکے گا", "کتنے کا بکے گا", "بیچنا", "قیمت کیا ہے", "مارکیٹ ویلیو", "ویلیوایشن", "کتنے کا بک جائے گا"
+        "kitne ka hoga", "kitne ka sale hoga", "bechna hai", "bechnay", "bechni", "bechna",
+        "bechna chahta", "bechna chahta hun", "bechna chahta hoon", "bechni chahti", "bechna chahte",
+        "sale karna", "sale krna", "sale karna chahta", "sale krna chahta", "sell karna", "sell krna",
+        "sell karna chahta", "ghar bechna", "plot bechna", "flat bechna",
+        "بکے گا", "کتنے کا بکے گا", "بیچنا", "قیمت کیا ہے", "مارکیٹ ویلیو", "ویلیوایشن", "کتنے کا بک جائے گا",
+        "بیچنا چاہتا ہوں", "گھر بیچنا", "بیچنا ہے", "بیچنی ہے", "سیل کرنا ہے", "سیل کرنا چاہتا ہوں", "فروخت کرنا"
     )
     if any(w in t for w in valuation_cues):
         return "valuation"
@@ -776,9 +798,6 @@ def _classify_intent(text: str, state: AgentState, extracted: Dict[str, Any]) ->
         "amenit", "school", "schools", "hospital", "hospitals", "clinic", "college",
         "park", "mosque", "masjid", "market", "commercial", "developer", "builder",
         "sahooliyat", "sahulat", "authority", "faq", "kya documents", "kon se documents",
-        # FIX: "loan"/"mortgage" and "stamp duty" weren't covered at all —
-        # a plain "mortgage kaise milta hai" or "stamp duty kitni hai" fell
-        # through to the recommendation default instead of RAG.
         "loan", "mortgage", "stamp duty", "karza", "قرض",
         "سہولیات", "سہولت", "سکول", "ہسپتال", "کالج", "پارک"
     )
@@ -786,12 +805,6 @@ def _classify_intent(text: str, state: AgentState, extracted: Dict[str, Any]) ->
         return "rag"
 
     # 8. Pure standalone greeting
-    # FIX: bare "hi" used to match as a raw substring, which silently fired
-    # on "chahiye" (want/need — one of the most common words in real
-    # requests, e.g. "property dekhne ke liye time chahiye" was being
-    # misclassified as a greeting). Every other cue here is a full word/
-    # phrase long enough that substring matching is safe; "hi" specifically
-    # now requires a word boundary so it only matches the standalone word.
     greeting_cues = [
         "hello", "hey", "assalam", "salam", "aoa", "adaab", "start",
         "assalamualaykum", "assalam o alaikum", "assalamu alaikum", "وعلیکم", "وعلیکم السلام",
@@ -802,13 +815,11 @@ def _classify_intent(text: str, state: AgentState, extracted: Dict[str, Any]) ->
     if has_greeting_cue and not any(c in t for c in criteria_cues) and not extracted:
         return "greeting"
 
-    # 9. Learned fallback (Day 5.5): every rule above is a high-precision,
-    # hand-tuned cue for its intent, so we never let the ML model override
-    # them. It only gets a say once every rule has passed without a match —
-    # i.e. exactly the fuzzy cases that used to just silently default to
-    # "recommendation". As more real calls are logged and the classifier is
-    # periodically retrained (see learning/train_intent_classifier.py), this
-    # fallback gets more accurate without any code changes here.
+    # 8b. Active Valuation Qualification: User is answering city/society/marla for their property valuation
+    if is_valuation_context:
+        return "valuation"
+
+    # 9. Learned fallback (Day 5.5)
     ml_intent, ml_confidence = ml_predict_intent(text)
     if ml_intent and ml_intent != "recommendation":
         logger.info(f"[IntentDetectionNode] ML fallback classified '{text[:60]}' as '{ml_intent}' (confidence={ml_confidence:.2f})")
@@ -1103,19 +1114,29 @@ def intent_detection_node(state: AgentState) -> Dict[str, Any]:
 
     elif intent == "valuation":
         # Property Price Prediction qualification
-        # Extract default locality if mentioned loosely in text
+        prefs["purpose"] = "sell"
+        # Extract default locality if mentioned loosely in text or voice transcription
         if not prefs.get("locality"):
-            if "dha" in t_raw:
+            if any(k in t_raw for k in ("dha", "ڈی ایچ اے", "ڈیفنس", "defense", "defence", "squaty", "سوسائٹی")):
                 prefs["locality"] = "DHA Phase 6"
-            elif "bahria" in t_raw:
+            elif any(k in t_raw for k in ("bahria", "بحریہ")):
                 prefs["locality"] = "Bahria Town"
-            elif "f-10" in t_raw or "f10" in t_raw:
+            elif any(k in t_raw for k in ("f-10", "f10")):
                 prefs["locality"] = "F-10"
-            elif "gulberg" in t_raw:
+            elif any(k in t_raw for k in ("gulberg", "گلبرگ")):
                 prefs["locality"] = "Gulberg"
+            elif any(k in t_raw for k in ("johar", "جوہر")):
+                prefs["locality"] = "Johar Town"
 
         if not prefs.get("city"):
-            prefs["city"] = "Lahore"
+            if any(c in t_raw for c in ("lahore", "لاہور")):
+                prefs["city"] = "Lahore"
+            elif any(c in t_raw for c in ("islamabad", "اسلام آباد")):
+                prefs["city"] = "Islamabad"
+            elif any(c in t_raw for c in ("rawalpindi", "راولپنڈی", "pindi")):
+                prefs["city"] = "Rawalpindi"
+            else:
+                prefs["city"] = "Lahore"
 
         # Check if caller specified locality and size
         if not prefs.get("locality") and prefs.get("area_marla") is None:
@@ -1124,7 +1145,7 @@ def intent_detection_node(state: AgentState) -> Dict[str, Any]:
             current_clarification = "valuation_details"
         elif not prefs.get("locality"):
             clarification_needed = True
-            clarification_prompt = f"Aap ka {int(prefs.get('area_marla', 20))} marla ghar kis city aur society mein waqia hai?"
+            clarification_prompt = f"Aap ka {int(prefs.get('area_marla', 10))} marla ghar kis city aur society mein waqia hai?"
             current_clarification = "valuation_locality"
         elif prefs.get("area_marla") is None:
             clarification_needed = True
@@ -1135,6 +1156,32 @@ def intent_detection_node(state: AgentState) -> Dict[str, Any]:
             current_clarification = ""
 
     elif intent == "recommendation":
+        # Guardrail: If user is selling, keep them in valuation flow and DO NOT ask for buyer budget!
+        is_val_ctx = (
+            state.get("intent") == "valuation"
+            or (isinstance(state.get("last_clarification_type"), str) and str(state.get("last_clarification_type", "")).startswith("valuation"))
+            or prefs.get("purpose") in ("sell", "bechna")
+        )
+        if prefs.get("purpose") in ("sell", "bechna") or is_val_ctx:
+            intent = "valuation"
+            prefs["purpose"] = "sell"
+            if not prefs.get("city"):
+                prefs["city"] = "Lahore"
+            if prefs.get("locality") and prefs.get("area_marla") is not None:
+                clarification_needed = False
+                current_clarification = ""
+            elif not prefs.get("locality") and prefs.get("area_marla") is None:
+                clarification_needed = True
+                clarification_prompt = "Ji bilkul, accurate valuation ke liye baraye meherbani batayein ke aap ka ghar kis city, society mein hai aur kitne marla ka hai?"
+                current_clarification = "valuation_details"
+            elif not prefs.get("locality"):
+                clarification_needed = True
+                clarification_prompt = f"Aap ka {int(prefs.get('area_marla', 10))} marla ghar kis city aur society mein waqia hai?"
+                current_clarification = "valuation_locality"
+            else:
+                clarification_needed = True
+                clarification_prompt = f"Janab, {prefs['locality']} mein aap ka ghar kitne marla ya kanal ka hai?"
+                current_clarification = "valuation_size"
         # Check if user says 'just show properties' or 'no specific budget'
         user_wants_direct_list = any(cue in t_raw for cue in NO_BUDGET_CUES)
 
