@@ -1,9 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Plus, Edit, Trash2, Calendar, Users, Building, CheckCircle, Clock, XCircle, Search, RefreshCw, AlertCircle, ArrowUpRight } from "lucide-react";
+import {
+  Plus, Edit, Trash2, Calendar, Users, Building, CheckCircle, Clock,
+  XCircle, Search, RefreshCw, AlertCircle, ArrowUpRight, Flame, Mail,
+  Phone, Sparkles, Send, Copy, Eye, Check, X, ShieldAlert, CheckCircle2, ChevronRight
+} from "lucide-react";
 import { formatPKR } from "./PropertyCard";
 
-export default function AdminPortal({ onRefreshStats }) {
-  const [activeAdminTab, setActiveAdminTab] = useState("properties"); // "properties" | "schedules" | "leads"
+export default function AdminPortal({ onRefreshStats, initialTab = "properties" }) {
+  const [activeAdminTab, setActiveAdminTab] = useState(initialTab); // "properties" | "schedules" | "leads" | "voice-leads"
+
+  useEffect(() => {
+    if (initialTab) setActiveAdminTab(initialTab);
+  }, [initialTab]);
   
   // Properties state
   const [properties, setProperties] = useState([]);
@@ -17,6 +25,17 @@ export default function AdminPortal({ onRefreshStats }) {
   const [leads, setLeads] = useState([]);
   const [stats, setStats] = useState({});
   const [loadingCRM, setLoadingCRM] = useState(false);
+
+  // Voice Call Lead Scoring & VIP Alerts state (Task 4)
+  const [voiceLeads, setVoiceLeads] = useState([]);
+  const [voiceStats, setVoiceStats] = useState({});
+  const [loadingVoice, setLoadingVoice] = useState(false);
+  const [voiceFilter, setVoiceFilter] = useState("all"); // "all" | "hot" | "warm" | "cold"
+  const [voiceSearch, setVoiceSearch] = useState("");
+  const [selectedEmailAlert, setSelectedEmailAlert] = useState(null);
+  const [simulating, setSimulating] = useState(false);
+  const [copiedEmail, setCopiedEmail] = useState(false);
+  const [simulationSuccessMsg, setSimulationSuccessMsg] = useState("");
 
   // Modals state
   const [showAddModal, setShowAddModal] = useState(false);
@@ -79,6 +98,61 @@ export default function AdminPortal({ onRefreshStats }) {
     }
   }, []);
 
+  const fetchVoiceLeads = useCallback(async () => {
+    setLoadingVoice(true);
+    try {
+      const res = await fetch("/api/crm/voice-leads?limit=50");
+      const data = await res.json();
+      if (data.ok) {
+        setVoiceLeads(data.voice_leads || []);
+        setVoiceStats(data.stats || {});
+      }
+    } catch (err) {
+      console.error("Failed to fetch voice leads:", err);
+    } finally {
+      setLoadingVoice(false);
+    }
+  }, []);
+
+  const handleSimulateCall = async (type) => {
+    setSimulating(true);
+    setSimulationSuccessMsg("");
+    try {
+      const res = await fetch("/api/crm/voice-leads/simulate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        await fetchVoiceLeads();
+        const isHot = data.lead_score?.tier === "Hot";
+        setSimulationSuccessMsg(
+          isHot
+            ? `🔥 Hot Lead simulated! Score: ${data.lead_score.conversion_score_pct}%. VIP alert email dispatched to ${data.lead_score.assigned_employee_email || 'closer.vip@realestatehub.pk'}.`
+            : `⚡ Warm Lead simulated! Score: ${data.lead_score.conversion_score_pct}%. Added to nurture pipeline.`
+        );
+        if (isHot && data.email_body) {
+          setSelectedEmailAlert({
+            call_id: data.call_id,
+            caller_id: "+923009988112",
+            conversion_score_pct: data.lead_score.conversion_score_pct,
+            tier: "Hot",
+            customer_persona: data.lead_score.customer_persona,
+            assigned_employee_email: data.lead_score.assigned_employee_email || "closer.vip@realestatehub.pk",
+            email_subject: data.email_subject || `🚨 [VIP HOT LEAD] ${data.call_id}`,
+            email_body: data.email_body,
+            created_at: new Date().toISOString(),
+          });
+        }
+      }
+    } catch (err) {
+      console.error("Simulation failed:", err);
+    } finally {
+      setSimulating(false);
+    }
+  };
+
   useEffect(() => {
     fetchProperties();
   }, [fetchProperties]);
@@ -86,6 +160,10 @@ export default function AdminPortal({ onRefreshStats }) {
   useEffect(() => {
     fetchCRMData();
   }, [fetchCRMData]);
+
+  useEffect(() => {
+    fetchVoiceLeads();
+  }, [fetchVoiceLeads]);
 
   // Handle Add Property
   const handleSaveAdd = async (e) => {
@@ -185,7 +263,7 @@ export default function AdminPortal({ onRefreshStats }) {
   return (
     <div className="py-8 px-4 sm:px-8 max-w-7xl mx-auto">
       {/* Top Metrics Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 mb-8">
         <div className="glass-panel p-4 bg-slate-900/80 rounded-2xl border border-white/10 flex items-center gap-3.5">
           <div className="p-3 rounded-xl bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">
             <Building className="w-5 h-5" />
@@ -225,40 +303,77 @@ export default function AdminPortal({ onRefreshStats }) {
             <div className="text-xs text-slate-400">CRM Client Leads</div>
           </div>
         </div>
+
+        <div
+          onClick={() => setActiveAdminTab("voice-leads")}
+          className="glass-panel p-4 bg-slate-900/80 rounded-2xl border border-red-500/20 hover:border-red-500/50 transition-all cursor-pointer flex items-center gap-3.5 group shadow-sm hover:shadow-red-950/20"
+          title="Click to view automated voice call scoring and VIP hot alerts"
+        >
+          <div className="p-3 rounded-xl bg-red-500/15 text-red-400 border border-red-500/30 group-hover:scale-105 transition-transform">
+            <Flame className="w-5 h-5 text-red-400 animate-pulse" />
+          </div>
+          <div>
+            <div className="text-xl font-heading font-extrabold text-white flex items-center gap-1.5">
+              <span>{voiceStats.total_calls_scored || voiceLeads.length}</span>
+              {voiceStats.hot_leads_count > 0 && (
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-red-500/25 text-red-300 font-bold border border-red-500/40">
+                  {voiceStats.hot_leads_count} Hot
+                </span>
+              )}
+            </div>
+            <div className="text-xs text-slate-400 group-hover:text-red-300 transition-colors">Voice Scored Leads</div>
+          </div>
+        </div>
       </div>
 
       {/* Admin Navigation Tabs */}
       <div className="flex flex-wrap items-center justify-between gap-4 mb-6 pb-4 border-b border-white/10">
-        <div className="flex bg-slate-900/80 p-1 rounded-xl border border-white/10">
+        <div className="flex flex-wrap bg-slate-900/80 p-1 rounded-xl border border-white/10 gap-1">
           <button
             onClick={() => setActiveAdminTab("properties")}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
               activeAdminTab === "properties"
                 ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
                 : "text-slate-300 hover:text-white"
             }`}
           >
-            Properties Management ({totalProps})
+            Properties ({totalProps})
           </button>
           <button
             onClick={() => setActiveAdminTab("schedules")}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
               activeAdminTab === "schedules"
                 ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
                 : "text-slate-300 hover:text-white"
             }`}
           >
-            CRM Visit Schedules ({appointments.length})
+            Visit Schedules ({appointments.length})
           </button>
           <button
             onClick={() => setActiveAdminTab("leads")}
-            className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
+            className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all ${
               activeAdminTab === "leads"
                 ? "bg-amber-500 text-slate-950 shadow-md shadow-amber-500/20"
                 : "text-slate-300 hover:text-white"
             }`}
           >
-            Client Leads Pipeline ({leads.length})
+            CRM Pipeline ({leads.length})
+          </button>
+          <button
+            onClick={() => setActiveAdminTab("voice-leads")}
+            className={`px-3.5 py-2 rounded-lg text-xs font-semibold transition-all flex items-center gap-1.5 ${
+              activeAdminTab === "voice-leads"
+                ? "bg-gradient-to-r from-red-600 to-amber-500 text-white font-bold shadow-md shadow-red-600/30"
+                : "text-red-300/80 hover:text-white"
+            }`}
+          >
+            <Flame className="w-3.5 h-3.5 text-amber-300" />
+            <span>Voice Lead Scoring & Alerts ({voiceLeads.length})</span>
+            {voiceStats.hot_leads_count > 0 && (
+              <span className="px-1.5 py-0.2 rounded-full text-[9px] bg-red-700 text-white font-extrabold shadow-sm">
+                {voiceStats.hot_leads_count} HOT
+              </span>
+            )}
           </button>
         </div>
 
@@ -498,6 +613,334 @@ export default function AdminPortal({ onRefreshStats }) {
                 ))}
               </tbody>
             </table>
+          </div>
+        </div>
+      )}
+
+      {/* Tab 4: Automated Post-Call Voice Lead Scoring & VIP Alerts (Task 4) */}
+      {activeAdminTab === "voice-leads" && (
+        <div className="space-y-6">
+          {/* Notification banner for simulation */}
+          {simulationSuccessMsg && (
+            <div className="p-4 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-between gap-3 text-amber-200 text-xs animate-in fade-in">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>{simulationSuccessMsg}</span>
+              </div>
+              <button
+                onClick={() => setSimulationSuccessMsg("")}
+                className="text-amber-400 hover:text-white p-1"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
+
+          {/* Voice Intelligence Metrics Banner */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3.5">
+            <div className="glass-panel p-4 bg-slate-900/80 rounded-2xl border border-white/10">
+              <div className="text-xs text-slate-400 mb-1 flex items-center justify-between">
+                <span>Total Calls Scored</span>
+                <Phone className="w-3.5 h-3.5 text-sky-400" />
+              </div>
+              <div className="text-2xl font-extrabold text-white">{voiceStats.total_calls_scored || voiceLeads.length}</div>
+              <div className="text-[11px] text-slate-500 mt-1">LightGBM Machine Learning</div>
+            </div>
+
+            <div className="glass-panel p-4 bg-slate-900/80 rounded-2xl border border-red-500/30 bg-red-950/20">
+              <div className="text-xs text-red-300 mb-1 flex items-center justify-between">
+                <span>🔥 Hot Leads (SLA Alert)</span>
+                <Flame className="w-3.5 h-3.5 text-red-400 animate-pulse" />
+              </div>
+              <div className="text-2xl font-extrabold text-red-400">{voiceStats.hot_leads_count || 0}</div>
+              <div className="text-[11px] text-red-300/70 mt-1">Prob &ge; 70% • &lt;15 min SLA</div>
+            </div>
+
+            <div className="glass-panel p-4 bg-slate-900/80 rounded-2xl border border-amber-500/20">
+              <div className="text-xs text-amber-300 mb-1 flex items-center justify-between">
+                <span>⚡ Warm Leads</span>
+                <Clock className="w-3.5 h-3.5 text-amber-400" />
+              </div>
+              <div className="text-2xl font-extrabold text-amber-400">{voiceStats.warm_leads_count || 0}</div>
+              <div className="text-[11px] text-slate-500 mt-1">24h Follow-up Nurture</div>
+            </div>
+
+            <div className="glass-panel p-4 bg-slate-900/80 rounded-2xl border border-emerald-500/20">
+              <div className="text-xs text-emerald-300 mb-1 flex items-center justify-between">
+                <span>VIP Alerts Dispatched</span>
+                <Mail className="w-3.5 h-3.5 text-emerald-400" />
+              </div>
+              <div className="text-2xl font-extrabold text-emerald-400">{voiceStats.vip_email_alerts_sent || 0}</div>
+              <div className="text-[11px] text-emerald-400/70 mt-1">Direct to Sales Closer</div>
+            </div>
+          </div>
+
+          {/* Interactive Toolbar */}
+          <div className="glass-panel p-4 bg-slate-900/80 rounded-2xl border border-white/10 space-y-3">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="text-xs font-semibold text-slate-400 mr-1">Filter Tier:</span>
+                {["all", "hot", "warm", "cold"].map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setVoiceFilter(t)}
+                    className={`px-3 py-1 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+                      voiceFilter === t
+                        ? t === "hot"
+                          ? "bg-red-500 text-white font-bold shadow-md shadow-red-500/20"
+                          : t === "warm"
+                          ? "bg-amber-500 text-slate-950 font-bold"
+                          : t === "cold"
+                          ? "bg-slate-600 text-white font-bold"
+                          : "bg-amber-400 text-slate-950 font-bold"
+                        : "bg-slate-950/60 text-slate-300 hover:text-white border border-white/5"
+                    }`}
+                  >
+                    {t === "all" ? `All (${voiceLeads.length})` : t}
+                  </button>
+                ))}
+              </div>
+
+              {/* Simulation One-Click Test Buttons */}
+              <div className="flex items-center gap-2">
+                <button
+                  disabled={simulating}
+                  onClick={() => handleSimulateCall("hot")}
+                  className="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-red-600 to-orange-600 hover:from-red-500 hover:to-orange-500 text-white text-xs font-bold shadow-md shadow-red-600/20 flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  title="Simulate high-intent caller booking a visit in DHA Phase 6, triggering instant VIP hot alert email"
+                >
+                  <Flame className="w-3.5 h-3.5 text-yellow-300" />
+                  <span>{simulating ? "Simulating..." : "⚡ Test Hot Lead Webhook"}</span>
+                </button>
+
+                <button
+                  disabled={simulating}
+                  onClick={() => handleSimulateCall("warm")}
+                  className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-500/30 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer disabled:opacity-50"
+                  title="Simulate general inquiry caller"
+                >
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>Test Warm Call</span>
+                </button>
+
+                <button
+                  onClick={fetchVoiceLeads}
+                  className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 border border-white/10"
+                  title="Refresh Call List"
+                >
+                  <RefreshCw className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </div>
+
+            {/* Search Input */}
+            <div className="relative">
+              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                value={voiceSearch}
+                onChange={(e) => setVoiceSearch(e.target.value)}
+                placeholder="Search by Call ID, Caller Phone (+92...), Society, Persona, or Action Plan..."
+                className="w-full pl-9 pr-4 py-2 rounded-xl bg-slate-950/80 border border-white/10 text-white text-xs placeholder:text-slate-500 focus:outline-none focus:border-amber-400"
+              />
+            </div>
+          </div>
+
+          {/* Cards List of Scored Calls */}
+          <div className="space-y-4">
+            {voiceLeads
+              .filter((vl) => {
+                if (voiceFilter !== "all" && vl.tier?.toLowerCase() !== voiceFilter.toLowerCase()) {
+                  return false;
+                }
+                if (!voiceSearch.trim()) return true;
+                const q = voiceSearch.toLowerCase();
+                return (
+                  vl.call_id?.toLowerCase().includes(q) ||
+                  vl.caller_id?.toLowerCase().includes(q) ||
+                  vl.society?.toLowerCase().includes(q) ||
+                  vl.city?.toLowerCase().includes(q) ||
+                  vl.customer_persona?.toLowerCase().includes(q) ||
+                  vl.transcript_summary?.toLowerCase().includes(q)
+                );
+              })
+              .map((vl) => {
+                const isHot = vl.tier === "Hot" || vl.hot_lead_alert_triggered;
+                const isWarm = vl.tier === "Warm";
+                return (
+                  <div
+                    key={vl.call_id}
+                    className={`glass-panel p-5 bg-slate-900/90 rounded-2xl border transition-all ${
+                      isHot
+                        ? "border-red-500/40 shadow-[0_0_25px_rgba(239,68,68,0.12)] hover:border-red-500/60"
+                        : "border-white/10 hover:border-white/20"
+                    }`}
+                  >
+                    {/* Header */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-white/10 mb-3.5">
+                      <div className="flex items-center gap-3">
+                        <div className={`p-2.5 rounded-xl flex items-center justify-center ${
+                          isHot
+                            ? "bg-red-500/20 text-red-400 border border-red-500/30"
+                            : isWarm
+                            ? "bg-amber-500/20 text-amber-400 border border-amber-500/30"
+                            : "bg-slate-700/30 text-slate-400 border border-white/10"
+                        }`}>
+                          <Phone className="w-4 h-4" />
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-heading font-extrabold text-sm text-white">{vl.caller_id}</span>
+                            <span className="font-mono text-[11px] text-slate-400 bg-slate-950 px-2 py-0.5 rounded-md border border-white/5">
+                              {vl.call_id}
+                            </span>
+                          </div>
+                          <div className="text-[11px] text-slate-400 mt-0.5">
+                            Duration: <span className="text-white font-medium">{vl.duration_sec}s ({Math.round(vl.duration_sec / 60)} min)</span> • {vl.created_at ? new Date(vl.created_at).toLocaleString() : "Recent"}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Tier Badge */}
+                      <div>
+                        {isHot ? (
+                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-red-600/30 to-amber-600/30 border border-red-500/50 text-red-200 text-xs font-extrabold shadow-lg shadow-red-900/30 animate-pulse">
+                            <Flame className="w-3.5 h-3.5 text-red-400" />
+                            <span>🔥 HOT LEAD (High Intent)</span>
+                          </div>
+                        ) : isWarm ? (
+                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-500/30 text-amber-300 text-xs font-bold">
+                            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                            <span>⚡ WARM LEAD</span>
+                          </div>
+                        ) : (
+                          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800 border border-white/10 text-slate-400 text-xs font-medium">
+                            <span>❄️ COLD LEAD</span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Body Grid */}
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4 text-xs">
+                      {/* Column 1: Score & Persona */}
+                      <div className="space-y-2.5 p-3 rounded-xl bg-slate-950/60 border border-white/5">
+                        <div>
+                          <div className="flex items-center justify-between text-[11px] text-slate-400 mb-1">
+                            <span>Conversion Probability</span>
+                            <span className="font-extrabold text-white text-xs">{vl.conversion_score_pct}%</span>
+                          </div>
+                          <div className="w-full h-2 rounded-full bg-slate-800 overflow-hidden">
+                            <div
+                              className={`h-full rounded-full transition-all duration-500 ${
+                                isHot
+                                  ? "bg-gradient-to-r from-orange-500 to-red-500"
+                                  : isWarm
+                                  ? "bg-gradient-to-r from-amber-400 to-yellow-500"
+                                  : "bg-slate-600"
+                              }`}
+                              style={{ width: `${Math.min(100, Math.max(10, vl.conversion_score_pct))}%` }}
+                            />
+                          </div>
+                        </div>
+
+                        <div>
+                          <span className="text-[11px] text-slate-400 block mb-0.5">Assigned Customer Persona</span>
+                          <span className="inline-block px-2 py-0.5 rounded-md bg-purple-500/15 text-purple-300 font-semibold border border-purple-500/20 text-[11px]">
+                            {vl.customer_persona || "Standard Buyer"}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Column 2: Parameters */}
+                      <div className="space-y-1.5 p-3 rounded-xl bg-slate-950/60 border border-white/5">
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Target Locality:</span>
+                          <span className="text-white font-medium">{vl.society}, {vl.city}</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Budget:</span>
+                          <span className="text-emerald-400 font-bold">
+                            PKR {(vl.budget_pkr / 10_000_000).toFixed(2)} Crore
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Visit Scheduled:</span>
+                          <span className={`font-semibold ${vl.visit_booked === "yes" ? "text-emerald-400" : "text-slate-400"}`}>
+                            {vl.visit_booked === "yes" ? "✅ Yes (Confirmed)" : "❌ No"}
+                          </span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span className="text-slate-400">Purpose:</span>
+                          <span className="text-cyan-300 capitalize">{vl.purpose || "Buy"}</span>
+                        </div>
+                      </div>
+
+                      {/* Column 3: SLA Action Plan */}
+                      <div className="space-y-1.5 p-3 rounded-xl bg-slate-950/60 border border-white/5">
+                        <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">
+                          Required Closer Action & SLA
+                        </span>
+                        <div className="text-white font-semibold flex items-center gap-1.5 text-xs text-amber-300">
+                          <Clock className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                          <span>{vl.action_plan || "Standard follow-up"}</span>
+                        </div>
+                        <p className="text-[11px] text-slate-400 leading-relaxed italic">
+                          Recommended pitch: "{vl.recommended_pitch || 'Present prime sector inventory and verified prices.'}"
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Transcript Summary */}
+                    {vl.transcript_summary && (
+                      <div className="mb-4 p-3 rounded-xl bg-slate-950/40 border border-white/5">
+                        <div className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold mb-1 flex items-center gap-1.5">
+                          <span>🎙️ Call Transcript Summary</span>
+                        </div>
+                        <p className="text-xs text-slate-300 font-light leading-relaxed">
+                          "{vl.transcript_summary}"
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Footer Actions */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-white/10">
+                      <div className="flex items-center gap-2">
+                        {vl.email_dispatched || isHot ? (
+                          <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-medium">
+                            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                            <span>
+                              VIP Email Alert Dispatched to <strong className="text-white underline">{vl.assigned_employee_email || 'closer.vip@realestatehub.pk'}</strong>
+                            </span>
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                            <Clock className="w-3.5 h-3.5 text-slate-400" />
+                            <span>Nurture workflow active (Email alert threshold: &ge; 70%)</span>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* View Email Alert Preview Button */}
+                      {(vl.email_dispatched || isHot || vl.email_body) && (
+                        <button
+                          onClick={() => setSelectedEmailAlert(vl)}
+                          className="px-3.5 py-1.5 rounded-xl bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 text-red-200 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer shadow-sm hover:scale-[1.02]"
+                        >
+                          <Mail className="w-3.5 h-3.5 text-red-400" />
+                          <span>View VIP Alert Email</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+
+            {voiceLeads.length === 0 && (
+              <div className="p-12 text-center glass-panel bg-slate-900/80 rounded-2xl border border-white/10 text-slate-400 text-xs">
+                No voice calls recorded yet. Click <span className="text-amber-400 font-bold">"⚡ Test Hot Lead Webhook"</span> above to test lead scoring and view an automated alert!
+              </div>
+            )}
           </div>
         </div>
       )}
@@ -789,6 +1232,120 @@ export default function AdminPortal({ onRefreshStats }) {
           </div>
         </div>
       )}
+
+      {/* Modal: VIP Hot Lead Email Alert Preview (Task 4) */}
+      {selectedEmailAlert && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in">
+          <div className="glass-panel max-w-2xl w-full bg-[#0c101d] border border-red-500/30 rounded-2xl shadow-2xl overflow-hidden max-h-[90vh] flex flex-col">
+            {/* Modal Header */}
+            <div className="p-4 bg-gradient-to-r from-red-950/80 to-slate-900 border-b border-red-500/30 flex items-center justify-between">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-xl bg-red-500/20 text-red-400 border border-red-500/30 flex items-center justify-center">
+                  <Mail className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-bold text-sm text-white flex items-center gap-2">
+                    <span>🚨 Automated VIP Hot Lead Alert</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-red-500/30 text-red-200 font-mono">
+                      {selectedEmailAlert.call_id}
+                    </span>
+                  </h3>
+                  <div className="text-[11px] text-red-300/80">
+                    Dispatched automatically upon voice call termination by Vapi telephony
+                  </div>
+                </div>
+              </div>
+              <button
+                onClick={() => setSelectedEmailAlert(null)}
+                className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Email Headers View */}
+            <div className="p-4 bg-slate-950/80 border-b border-white/10 text-xs space-y-1.5 font-mono">
+              <div className="flex">
+                <span className="w-20 text-slate-500">FROM:</span>
+                <span className="text-slate-300 font-semibold">automated-dispatch@realestatehub.pk</span>
+              </div>
+              <div className="flex">
+                <span className="w-20 text-slate-500">TO:</span>
+                <span className="text-amber-300 font-semibold">{selectedEmailAlert.assigned_employee_email || 'closer.vip@realestatehub.pk'}</span>
+              </div>
+              <div className="flex">
+                <span className="w-20 text-slate-500">SUBJECT:</span>
+                <span className="text-red-300 font-bold">{selectedEmailAlert.email_subject || `🚨 [VIP HOT LEAD] ${selectedEmailAlert.call_id} — ${selectedEmailAlert.conversion_score_pct}% Intent`}</span>
+              </div>
+              <div className="flex">
+                <span className="w-20 text-slate-500">PRIORITY:</span>
+                <span className="text-red-400 font-bold">HIGH (Immediate 15-Minute SLA Outreach)</span>
+              </div>
+            </div>
+
+            {/* Email Body */}
+            <div className="p-5 overflow-y-auto flex-1 text-xs text-slate-200 font-mono leading-relaxed bg-[#080b14] whitespace-pre-wrap select-text">
+              {selectedEmailAlert.email_body || (
+                `======================================================================
+FROM: automated-dispatch@realestatehub.pk
+TO: ${selectedEmailAlert.assigned_employee_email || 'closer.vip@realestatehub.pk'}
+DATE: ${new Date(selectedEmailAlert.created_at || Date.now()).toUTCString()}
+SUBJECT: 🚨 [VIP HOT LEAD] ${selectedEmailAlert.call_id} — ${selectedEmailAlert.conversion_score_pct}% Conversion Intent (SLA: < 15 minutes)
+PRIORITY: HIGH (Immediate Action Required)
+======================================================================
+
+Dear Senior Closer / Sales Director,
+
+A high-value prospect has just concluded an intake call with the Voice Agent.
+The ML Lead Scoring Model has classified this lead as 🔥 HOT with ${selectedEmailAlert.conversion_score_pct}% conversion probability.
+
+📋 LEAD DETAILS:
+  • Call ID: ${selectedEmailAlert.call_id}
+  • Caller Phone: ${selectedEmailAlert.caller_id}
+  • Customer Persona: ${selectedEmailAlert.customer_persona || 'Luxury Villa Upgrader & HNI'}
+  • Required SLA: < 15 minutes
+
+🎙️ CALL TRANSCRIPT SUMMARY:
+  "${selectedEmailAlert.transcript_summary}"
+
+💡 RECOMMENDED SALES PLAYBOOK & PITCH:
+  "${selectedEmailAlert.recommended_pitch || 'Highlight prime sector locations, corner park-facing plots, bespoke architecture, and privacy.'}"
+
+🇵🇰 URDULISH REASONING:
+  "Yeh lead 🔥 Hot hai (Conversion Probability: ${selectedEmailAlert.conversion_score_pct}%). Wajah: high buyer intent, site visit confirmed, DHA Phase 6 priority. Recommended SLA: < 15 minutes ke andar Senior Closer call kare."
+
+Please initiate direct contact with the client immediately.
+RealEstate-Hub CRM Automated Lead Dispatcher
+----------------------------------------------------------------------`
+              )}
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 bg-slate-900 border-t border-white/10 flex items-center justify-between">
+              <button
+                onClick={() => {
+                  const textToCopy = selectedEmailAlert.email_body || `Subject: ${selectedEmailAlert.email_subject}\n\nCall ID: ${selectedEmailAlert.call_id}\nCaller: ${selectedEmailAlert.caller_id}`;
+                  navigator.clipboard.writeText(textToCopy);
+                  setCopiedEmail(true);
+                  setTimeout(() => setCopiedEmail(false), 2000);
+                }}
+                className="px-3.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold flex items-center gap-1.5 transition-all cursor-pointer"
+              >
+                {copiedEmail ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedEmail ? "Copied to Clipboard!" : "Copy Email Text"}</span>
+              </button>
+
+              <button
+                onClick={() => setSelectedEmailAlert(null)}
+                className="px-4 py-1.5 rounded-xl bg-red-600 hover:bg-red-500 text-white text-xs font-semibold cursor-pointer"
+              >
+                Close Preview
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Home, Sparkles, Shield, User, LogIn, LogOut, PhoneCall, Calendar, ArrowUpRight } from "lucide-react";
+import { Home, Sparkles, Shield, User, LogIn, LogOut, PhoneCall, Calendar, ArrowUpRight, Flame } from "lucide-react";
 
 export default function Navbar({
   currentUser,
@@ -87,6 +87,19 @@ export default function Navbar({
             <span>Schedules</span>
             {activeTab === "crm" && (
               <span className="absolute -bottom-1.5 left-0 right-0 h-[2px] bg-[#8fa89b] rounded-full shadow-[0_0_8px_rgba(143,168,155,0.7)]" />
+            )}
+          </button>
+
+          <button
+            onClick={() => setActiveTab("voice-leads")}
+            className={`relative py-1 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5 cursor-pointer ${
+              activeTab === "voice-leads" ? "text-amber-300 font-semibold" : "text-amber-200/80 hover:text-amber-200"
+            }`}
+          >
+            <Flame className="w-3.5 h-3.5 text-amber-400" />
+            <span>Voice Leads & Alerts</span>
+            {activeTab === "voice-leads" && (
+              <span className="absolute -bottom-1.5 left-0 right-0 h-[2px] bg-gradient-to-r from-red-500 to-amber-400 rounded-full shadow-[0_0_8px_rgba(251,191,36,0.7)]" />
             )}
           </button>
 

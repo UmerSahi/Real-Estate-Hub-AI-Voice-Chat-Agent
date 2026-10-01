@@ -21,6 +21,7 @@ import {
   Clock,
   ArrowUpRight,
   CheckCircle2,
+  Flame,
 } from "lucide-react";
 
 export default function App() {
@@ -288,7 +289,26 @@ export default function App() {
                 Real-time appointment calendar integrated with LangGraph agent and email notifications.
               </p>
             </div>
-            <AdminPortal onRefreshStats={checkHealth} />
+            <AdminPortal initialTab="schedules" onRefreshStats={checkHealth} />
+          </div>
+        )}
+
+        {/* Voice Lead Scoring & VIP Alerts Tab (Task 4) */}
+        {activeTab === "voice-leads" && (
+          <div className="pt-28 pb-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-8 mb-6 text-left">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-500/10 border border-red-500/30 text-red-300 text-xs font-semibold mb-2">
+                <Flame className="w-3.5 h-3.5 text-red-400" />
+                <span>Automated Voice Call Lead Scoring & VIP Alerts</span>
+              </div>
+              <h1 className="font-display-serif text-3xl sm:text-4xl font-normal text-white">
+                Voice Call Telemetry & Hot Lead Scoring
+              </h1>
+              <p className="text-slate-400 text-xs mt-1">
+                Post-call webhook data from Vapi evaluated by Machine Learning with automatic VIP email dispatch.
+              </p>
+            </div>
+            <AdminPortal initialTab="voice-leads" onRefreshStats={checkHealth} />
           </div>
         )}
 
