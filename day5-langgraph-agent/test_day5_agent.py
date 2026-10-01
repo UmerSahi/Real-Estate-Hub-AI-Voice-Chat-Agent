@@ -230,6 +230,43 @@ class TestDay5LangGraphAgent(unittest.TestCase):
         self.assertTrue(os.path.exists(traces["json_path"]))
         self.assertTrue(os.path.exists(traces["md_path"]))
 
+    # -----------------------------------------------------------------------
+    # Task 4: Voice Agent ML Integration Tests
+    # -----------------------------------------------------------------------
+    def test_task4_voice_agent_price_valuation_mera_ghar_kitne_ka_bikega(self):
+        """Verify the voice agent answers 'Mera ghar kitne ka bikega?' using ML valuation."""
+        res = run_agent_turn(
+            "Mera DHA Phase 6 mein 1 kanal ghar kitne ka bikega?",
+            session_id="test_voice_val_auto",
+        )
+        self.assertEqual(res.get("intent"), "valuation")
+        self.assertEqual(res.get("last_node"), "ValuationNode")
+        reply = res.get("final_response", "")
+        self.assertIn("crore", reply.lower())
+        self.assertTrue(any(word in reply.lower() for word in ["takhmeena", "market", "value", "qeemat"]))
+
+    def test_task4_post_call_lead_scoring_and_hot_lead_email_alert(self):
+        """Verify post-call lead scoring evaluates conversion probability and flags hot leads."""
+        from tools.ml_tools import score_voice_call_lead
+        score_res = score_voice_call_lead(
+            call_id="CALL-TEST-HOT-01",
+            caller_id="+923009988776",
+            call_duration_sec=480,
+            budget_pkr=60_000_000.0,
+            preferred_city="Lahore",
+            preferred_society="DHA Phase 6",
+            purpose="buy",
+            visit_booked="yes",
+            number_of_calls=5,
+            transcript_summary="High-intent caller completed second walkthrough, requested contract drafting.",
+            assigned_employee_email="closer.vip@realestatehub.pk",
+        )
+        self.assertIn("conversion_score_pct", score_res)
+        self.assertIn("tier", score_res)
+        self.assertIn("action_plan", score_res)
+        self.assertEqual(score_res["tier"], "Hot")
+        self.assertTrue(score_res["hot_lead_alert_triggered"])
+
 
 if __name__ == "__main__":
     unittest.main()

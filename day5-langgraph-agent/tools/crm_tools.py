@@ -11,7 +11,7 @@ import random
 import re
 import uuid
 from typing import Any, Dict, List, Optional
-from sqlalchemy import Column, MetaData, String, Table, Text, create_engine, select, text
+from sqlalchemy import Boolean, Column, Float, Integer, MetaData, String, Table, Text, create_engine, select, text
 from langchain_core.tools import tool
 
 from config import get_engine
@@ -53,6 +53,31 @@ crm_appointments = Table(
     Column("notes", Text),
     Column("created_at", String(64)),
     Column("updated_at", String(64)),
+)
+
+voice_lead_scores = Table(
+    "voice_lead_scores",
+    metadata,
+    Column("call_id", String(64), primary_key=True),
+    Column("caller_id", String(64)),
+    Column("duration_sec", Integer),
+    Column("budget_pkr", Float),
+    Column("city", String(64)),
+    Column("society", String(64)),
+    Column("purpose", String(32)),
+    Column("visit_booked", String(16)),
+    Column("conversion_score_pct", Integer),
+    Column("tier", String(32)),
+    Column("customer_persona", String(128)),
+    Column("action_plan", Text),
+    Column("recommended_pitch", Text),
+    Column("transcript_summary", Text),
+    Column("hot_lead_alert_triggered", Boolean),
+    Column("email_dispatched", Boolean),
+    Column("assigned_employee_email", String(128)),
+    Column("email_subject", String(256)),
+    Column("email_body", Text),
+    Column("created_at", String(64)),
 )
 
 
@@ -508,3 +533,200 @@ def crm_tool(
         return json.dumps({"status": "success", "appointment": appt})
 
     return json.dumps({"error": f"Unknown CRM action '{action}'"})
+
+
+# ============================================================================
+# Post-Call Voice Lead Scoring Persistence & Stats (Task 4)
+# ============================================================================
+
+def save_voice_lead_score(data: Dict[str, Any]) -> bool:
+    """Persist an automated voice call lead score and alert status."""
+    engine = get_engine()
+    now_iso = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    cid = data.get("call_id") or f"CALL-{uuid.uuid4().hex[:8].upper()}"
+
+    rec = {
+        "call_id": cid,
+        "caller_id": str(data.get("caller_id", "+923001234567")),
+        "duration_sec": int(data.get("duration_sec") or data.get("call_duration_sec") or 180),
+        "budget_pkr": float(data.get("budget_pkr") or 35_000_000.0),
+        "city": str(data.get("city") or data.get("preferred_city") or "Lahore"),
+        "society": str(data.get("society") or data.get("preferred_society") or "DHA Phase 6"),
+        "purpose": str(data.get("purpose") or "buy"),
+        "visit_booked": str(data.get("visit_booked") or "no"),
+        "conversion_score_pct": int(data.get("conversion_score_pct") or 50),
+        "tier": str(data.get("tier") or "Warm"),
+        "customer_persona": str(data.get("customer_persona") or "Standard Family Buyer"),
+        "action_plan": str(data.get("action_plan") or "Nurture follow-up"),
+        "recommended_pitch": str(data.get("recommended_pitch") or ""),
+        "transcript_summary": str(data.get("transcript_summary") or ""),
+        "hot_lead_alert_triggered": bool(data.get("hot_lead_alert_triggered", False)),
+        "email_dispatched": bool(data.get("email_dispatched", False)),
+        "assigned_employee_email": str(data.get("assigned_employee_email") or "closer.vip@realestatehub.pk"),
+        "email_subject": str(data.get("email_subject") or ""),
+        "email_body": str(data.get("email_body") or ""),
+        "created_at": data.get("created_at") or now_iso,
+    }
+
+    try:
+        with engine.begin() as conn:
+            exists_q = text("SELECT 1 FROM voice_lead_scores WHERE call_id = :cid")
+            found = conn.execute(exists_q, {"cid": cid}).scalar()
+            if found:
+                update_cols = ", ".join(f"{k} = :{k}" for k in rec.keys() if k != "call_id")
+                conn.execute(text(f"UPDATE voice_lead_scores SET {update_cols} WHERE call_id = :call_id"), rec)
+            else:
+                cols = ", ".join(rec.keys())
+                placeholders = ", ".join(f":{k}" for k in rec.keys())
+                conn.execute(text(f"INSERT INTO voice_lead_scores ({cols}) VALUES ({placeholders})"), rec)
+        return True
+    except Exception as err:
+        print(f"[CRM Warning] Failed to save voice lead score: {err}")
+        return False
+
+
+def _seed_initial_voice_lead_scores():
+    """Seed sample voice lead calls so the admin portal displays active data immediately."""
+    engine = get_engine()
+    samples = [
+        {
+            "call_id": "CALL-VIP-101",
+            "caller_id": "+923009998877",
+            "duration_sec": 310,
+            "budget_pkr": 60000000.0,
+            "city": "Lahore",
+            "society": "DHA Phase 6",
+            "purpose": "buy",
+            "visit_booked": "yes",
+            "conversion_score_pct": 85,
+            "tier": "Hot",
+            "customer_persona": "Luxury Villa Upgrader & HNI",
+            "action_plan": "Immediate 15-minute VIP sales outreach",
+            "recommended_pitch": "Highlight prime sector locations, corner park-facing plots, bespoke architecture, and privacy.",
+            "transcript_summary": "VIP buyer completed walkthrough inquiry, ready for token transfer after Saturday viewing.",
+            "hot_lead_alert_triggered": True,
+            "email_dispatched": True,
+            "assigned_employee_email": "closer.vip@realestatehub.pk",
+            "email_subject": "🚨 [VIP HOT LEAD] CALL-VIP-101 — 85% Conversion Intent (SLA: < 15 minutes)",
+            "email_body": (
+                "FROM: automated-dispatch@realestatehub.pk\n"
+                "TO: closer.vip@realestatehub.pk\n"
+                "SUBJECT: 🚨 [VIP HOT LEAD] CALL-VIP-101 — 85% Conversion Intent (SLA: < 15 minutes)\n"
+                "PRIORITY: HIGH (Immediate Action Required)\n\n"
+                "Dear Senior Closer / Sales Director,\n\n"
+                "A high-value prospect has just concluded an intake call with the Voice Agent.\n"
+                "The ML Lead Scoring Model has classified this lead as 🔥 HOT with 85% conversion probability.\n\n"
+                "📋 LEAD DETAILS:\n"
+                "  • Call ID: CALL-VIP-101\n"
+                "  • Caller Phone: +923009998877\n"
+                "  • Customer Persona: Luxury Villa Upgrader & HNI\n"
+                "  • Required SLA: < 15 minutes\n\n"
+                "🎙️ CALL TRANSCRIPT SUMMARY:\n"
+                "  \"VIP buyer completed walkthrough inquiry, ready for token transfer after Saturday viewing.\"\n\n"
+                "💡 RECOMMENDED SALES PLAYBOOK & PITCH:\n"
+                "  \"Highlight prime sector locations, corner park-facing plots, bespoke architecture, and privacy.\"\n\n"
+                "🇵🇰 URDULISH REASONING:\n"
+                "  \"Yeh lead 🔥 Hot hai (Conversion Probability: 85%). Wajah: site visit already booked hai, high budget (6.00 Crore), DHA Phase 6 priority. Recommended SLA: < 15 minutes ke andar Senior Closer call kare.\"\n"
+            ),
+            "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        },
+        {
+            "call_id": "CALL-WARM-102",
+            "caller_id": "+923214567890",
+            "duration_sec": 195,
+            "budget_pkr": 25000000.0,
+            "city": "Islamabad",
+            "society": "F-10",
+            "purpose": "buy",
+            "visit_booked": "no",
+            "conversion_score_pct": 54,
+            "tier": "Warm",
+            "customer_persona": "Mid-Tier Residential Buyer",
+            "action_plan": "24-hour nurture follow-up via WhatsApp catalog",
+            "recommended_pitch": "Present comparative price trends in F-10 and neighboring sectors.",
+            "transcript_summary": "Inquired about 10 Marla houses in F-10, requested brochure and pricing breakdown.",
+            "hot_lead_alert_triggered": False,
+            "email_dispatched": False,
+            "assigned_employee_email": "closer.vip@realestatehub.pk",
+            "email_subject": "",
+            "email_body": "",
+            "created_at": (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=2)).isoformat(),
+        },
+        {
+            "call_id": "CALL-COLD-103",
+            "caller_id": "+923331122334",
+            "duration_sec": 70,
+            "budget_pkr": 8000000.0,
+            "city": "Rawalpindi",
+            "society": "Bahria Town",
+            "purpose": "rent",
+            "visit_booked": "no",
+            "conversion_score_pct": 24,
+            "tier": "Cold",
+            "customer_persona": "Low Intent Browser",
+            "action_plan": "Automated SMS marketing campaign enrollment",
+            "recommended_pitch": "Share monthly rental listings newsletter.",
+            "transcript_summary": "Caller asked general rental questions for 5 Marla flat, no immediate move date.",
+            "hot_lead_alert_triggered": False,
+            "email_dispatched": False,
+            "assigned_employee_email": "closer.vip@realestatehub.pk",
+            "email_subject": "",
+            "email_body": "",
+            "created_at": (datetime.datetime.now(datetime.timezone.utc) - datetime.timedelta(hours=5)).isoformat(),
+        },
+    ]
+
+    for s in samples:
+        try:
+            with engine.begin() as conn:
+                exists = conn.execute(text("SELECT 1 FROM voice_lead_scores WHERE call_id = :cid"), {"cid": s["call_id"]}).scalar()
+                if not exists:
+                    cols = ", ".join(s.keys())
+                    placeholders = ", ".join(f":{k}" for k in s.keys())
+                    conn.execute(text(f"INSERT INTO voice_lead_scores ({cols}) VALUES ({placeholders})"), s)
+        except Exception:
+            pass
+
+
+def get_voice_lead_scores(limit: int = 50) -> List[Dict[str, Any]]:
+    """Retrieve all logged post-call lead scores."""
+    engine = get_engine()
+    try:
+        with engine.connect() as conn:
+            stmt = select(voice_lead_scores).order_by(voice_lead_scores.c.created_at.desc()).limit(limit)
+            rows = conn.execute(stmt).mappings().all()
+            if rows:
+                return [dict(r) for r in rows]
+    except Exception as err:
+        print(f"[CRM Warning] Failed to fetch voice lead scores: {err}")
+
+    # Seed initial sample entries if table is newly created
+    _seed_initial_voice_lead_scores()
+    try:
+        with engine.connect() as conn:
+            stmt = select(voice_lead_scores).order_by(voice_lead_scores.c.created_at.desc()).limit(limit)
+            rows = conn.execute(stmt).mappings().all()
+            return [dict(r) for r in rows]
+    except Exception:
+        return []
+
+
+def get_voice_lead_stats() -> Dict[str, Any]:
+    """Calculate aggregated stats for voice call lead scores."""
+    scores = get_voice_lead_scores(limit=100)
+    total = len(scores)
+    hot = sum(1 for s in scores if s.get("tier") == "Hot" or s.get("hot_lead_alert_triggered"))
+    warm = sum(1 for s in scores if s.get("tier") == "Warm")
+    cold = sum(1 for s in scores if s.get("tier") == "Cold")
+    dispatched = sum(1 for s in scores if s.get("email_dispatched"))
+    avg_score = round(sum(s.get("conversion_score_pct", 0) for s in scores) / total, 1) if total > 0 else 0.0
+
+    return {
+        "total_calls_scored": total,
+        "hot_leads_count": hot,
+        "warm_leads_count": warm,
+        "cold_leads_count": cold,
+        "vip_email_alerts_sent": dispatched,
+        "avg_conversion_score_pct": avg_score,
+    }
+
