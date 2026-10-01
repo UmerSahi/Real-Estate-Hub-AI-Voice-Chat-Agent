@@ -1,0 +1,28 @@
+artifact_path: file:///C:/Users/PMYLS/Downloads/realestate-hub vapi and deepgram/Week
+  8/Day 2/mlruns/1/models/m-edc5b33de484445aa943465f4d45db05/artifacts
+flavors:
+  lightgbm:
+    code: null
+    data: model.skops
+    lgb_version: 4.7.0
+    model_class: lightgbm.sklearn.LGBMRegressor
+    serialization_format: skops
+    skops_trusted_types:
+    - collections.OrderedDict
+    - lightgbm.sklearn.LGBMClassifier
+    - lightgbm.basic.Booster
+    - lightgbm.sklearn.LGBMRegressor
+  python_function:
+    data: model.skops
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.lightgbm
+    python_version: 3.12.5
+mlflow_version: 3.16.1
+model_id: m-edc5b33de484445aa943465f4d45db05
+model_size_bytes: 862471
+model_uuid: m-edc5b33de484445aa943465f4d45db05
+prompts: null
+run_id: 9d6343fc29704848a1ad40c8fe2f145c
+utc_time_created: '2026-09-28 10:15:39.160207'

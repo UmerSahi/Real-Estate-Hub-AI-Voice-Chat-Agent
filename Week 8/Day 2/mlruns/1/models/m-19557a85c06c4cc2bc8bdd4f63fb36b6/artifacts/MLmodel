@@ -1,0 +1,23 @@
+artifact_path: file:///C:/Users/PMYLS/Downloads/realestate-hub vapi and deepgram/Week
+  8/Day 2/mlruns/1/models/m-19557a85c06c4cc2bc8bdd4f63fb36b6/artifacts
+flavors:
+  catboost:
+    catboost_version: 1.2.10
+    code: null
+    data: model.cb
+    model_type: CatBoostRegressor
+    save_format: cbm
+  python_function:
+    data: model.cb
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.catboost
+    python_version: 3.12.5
+mlflow_version: 3.16.1
+model_id: m-19557a85c06c4cc2bc8bdd4f63fb36b6
+model_size_bytes: 229720
+model_uuid: m-19557a85c06c4cc2bc8bdd4f63fb36b6
+prompts: null
+run_id: 88db4952ee9846c9a37a465765897ebf
+utc_time_created: '2026-09-28 10:06:11.295605'

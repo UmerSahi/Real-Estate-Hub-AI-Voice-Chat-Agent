@@ -1,0 +1,11 @@
+lead_id,lead_source,budget,preferred_city,preferred_society,purpose,number_of_calls,call_duration_avg_sec,response_time_min,visit_booked,days_since_first_contact,objection_raised,budget_pkr,lead_engagement_score,response_speed_category,budget_to_market_ratio,lead_velocity,high_intent_flag
+LEAD-20415,call,"44,026,194",Lahore,Gulberg III,buy,1,96,70.0,no,26,financing / bank loan unavailable,44026194.0,1.6,Standard (1h-4h),0.917212375,0.037037037037037,0
+LEAD-22925,call,PKR 5.01 Crore,Karachi,Gulshan-e-Iqbal,rent,5,286,4.0,yes,5,legal / NOC documentation concerns,50100000.0,23.83333333333333,Immediate (<=15m),2.277272727272728,0.8333333333333334,1
+LEAD-21840,WhatsApp,13.75 Crore,Lahore,DHA Phase 5,buy,1,28,55.0,no,3,none,137500000.0,0.4666666666666667,Prompt (15m-1h),3.055555555555556,0.25,0
+LEAD-20298,WhatsApp,16142789,Karachi,Gulshan-e-Iqbal,invest,1,120,31.0,no,80,none,16142789.0,2.0,Prompt (15m-1h),0.7337631363636363,0.0123456790123456,0
+LEAD-21068,call,2.95 Crore,Islamabad,E-11,buy,2,161,70.0,no,2,none,29500000.0,5.366666666666666,Standard (1h-4h),1.1346153846153846,0.6666666666666666,0
+LEAD-22840,walk-in,"15,455,342",Rawalpindi,Bahria Town Phase 7,buy,2,170,126.0,no,11,price too high,15455342.0,5.666666666666667,Standard (1h-4h),0.6439725833333333,0.1666666666666666,0
+LEAD-20032,WhatsApp,4.33 Crore,Lahore,Faisal Town,invest,4,124,10.0,no,30,none,43300000.0,8.266666666666667,Immediate (<=15m),1.6653846153846157,0.1290322580645161,0
+LEAD-21945,call,"39,269,546",Karachi,DHA Defence,rent,1,217,61.0,no,55,looking for installment plan,39269546.0,3.6166666666666663,Standard (1h-4h),0.8536857826086957,0.0178571428571428,0
+LEAD-22628,call,9.56 Crore,Karachi,Clifton,buy,2,144,117.0,yes,34,none,95600000.0,4.8,Standard (1h-4h),1.9510204081632652,0.0571428571428571,0
+LEAD-22895,call,"15,142,587",Rawalpindi,Bahria Town Phase 8,invest,3,83,8.0,no,5,price too high,15142587.0,4.15,Immediate (<=15m),0.7210755714285715,0.5,0

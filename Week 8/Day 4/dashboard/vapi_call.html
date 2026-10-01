@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RealEstate-Hub | Live Vapi UrduLish Voice Console</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #0d1117;
+      color: #e6edf3;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      overflow-x: hidden;
+    }
+    .card {
+      background: linear-gradient(135deg, rgba(22, 27, 34, 0.98), rgba(30, 36, 45, 0.98));
+      border: 1px solid rgba(48, 54, 61, 0.85);
+      border-radius: 16px;
+      padding: 24px 28px;
+      max-width: 680px;
+      width: 100%;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.6);
+      text-align: center;
+      position: relative;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 10px;
+      background: rgba(46, 160, 67, 0.2);
+      border: 1px solid #3fb950;
+      color: #3fb950;
+      transition: all 0.3s ease;
+    }
+    .badge.connecting {
+      background: rgba(210, 153, 34, 0.2);
+      border-color: #d29922;
+      color: #d29922;
+    }
+    .badge.active {
+      background: rgba(248, 81, 73, 0.2);
+      border-color: #f85149;
+      color: #f85149;
+    }
+    h1 {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: #f0f6fc;
+      margin-bottom: 6px;
+    }
+    p.subtitle {
+      font-size: 0.88rem;
+      color: #8b949e;
+      margin-bottom: 20px;
+    }
+    .mic-alert {
+      display: none;
+      background: rgba(248, 81, 73, 0.15);
+      border: 1px solid #f85149;
+      color: #ff7b72;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      text-align: left;
+    }
+    .pulse-container {
+      position: relative;
+      width: 120px;
+      height: 120px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .pulse-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: rgba(46, 160, 67, 0.3);
+      animation: pulse 2s infinite ease-out;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+    .pulse-ring.active {
+      opacity: 1;
+      background: rgba(248, 81, 73, 0.35);
+    }
+    @keyframes pulse {
+      0% { transform: scale(0.85); opacity: 0.8; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+    .call-btn {
+      width: 84px;
+      height: 84px;
+      border-radius: 50%;
+      border: none;
+      background: #2ea043;
+      color: white;
+      font-size: 2.2rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s ease;
+      box-shadow: 0 8px 24px rgba(46, 160, 67, 0.45);
+      z-index: 2;
+      outline: none;
+    }
+    .call-btn:hover {
+      transform: scale(1.06);
+      background: #3fb950;
+    }
+    .call-btn.connecting {
+      background: #d29922;
+      box-shadow: 0 8px 24px rgba(210, 153, 34, 0.45);
+      animation: spin-pulse 1.2s infinite ease-in-out;
+    }
+    .call-btn.active {
+      background: #da3633;
+      box-shadow: 0 8px 24px rgba(218, 54, 51, 0.55);
+    }
+    .call-btn.active:hover {
+      background: #f85149;
+    }
+    .status-text {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+      color: #79c0ff;
+      min-height: 24px;
+    }
+    .timer {
+      font-size: 0.85rem;
+      color: #8b949e;
+      margin-bottom: 12px;
+      font-family: monospace;
+    }
+    /* Audio Equalizer Bars */
+    .equalizer-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-end;
+      gap: 5px;
+      height: 24px;
+      margin-bottom: 16px;
+    }
+    .eq-bar {
+      width: 4px;
+      height: 4px;
+      background: #3fb950;
+      border-radius: 2px;
+      transition: height 0.1s ease;
+    }
+    .transcript-box {
+      background: rgba(13, 17, 23, 0.9);
+      border: 1px solid rgba(48, 54, 61, 0.8);
+      border-radius: 10px;
+      padding: 14px;
+      min-height: 120px;
+      max-height: 190px;
+      overflow-y: auto;
+      text-align: left;
+      font-size: 0.86rem;
+      line-height: 1.5;
+      color: #c9d1d9;
+      margin-bottom: 16px;
+      scroll-behavior: smooth;
+    }
+    .msg-bubble {
+      margin-bottom: 8px;
+      padding: 6px 10px;
+      border-radius: 6px;
+    }
+    .msg-bubble.user {
+      background: rgba(56, 139, 253, 0.12);
+      border-left: 3px solid #58a6ff;
+    }
+    .msg-bubble.bot {
+      background: rgba(46, 160, 67, 0.12);
+      border-left: 3px solid #3fb950;
+    }
+    .msg-user {
+      color: #79c0ff;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .msg-bot {
+      color: #7ee787;
+      font-weight: 600;
+      margin-right: 4px;
+    }
+    .guide-box {
+      background: rgba(22, 27, 34, 0.7);
+      border: 1px dashed rgba(56, 139, 253, 0.35);
+      border-radius: 8px;
+      padding: 12px 14px;
+      text-align: left;
+      font-size: 0.82rem;
+      color: #8b949e;
+    }
+    .guide-title {
+      font-weight: 600;
+      color: #d2a8ff;
+      margin-bottom: 6px;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 6px;
+    }
+    .chip {
+      background: rgba(48, 54, 61, 0.6);
+      padding: 4px 10px;
+      border-radius: 14px;
+      color: #e6edf3;
+      font-size: 0.78rem;
+      border: 1px solid rgba(110, 118, 129, 0.3);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .chip:hover {
+      background: rgba(56, 139, 253, 0.3);
+      border-color: #58a6ff;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge" id="connBadge">🟢 WebRTC Audio Ready</div>
+    <h1>🎙️ RealEstate-Hub Live Voice Agent</h1>
+    <p class="subtitle">Live conversation in UrduLish powered by Vapi, Deepgram Nova-3 & Gemini</p>
+
+    <div class="mic-alert" id="micAlert">
+      ⚠️ <strong>Microphone Access Blocked:</strong> Please allow microphone access in your browser's address bar to speak with the agent.
+    </div>
+
+    <div class="pulse-container">
+      <div class="pulse-ring" id="pulseRing"></div>
+      <button class="call-btn" id="callBtn" title="Start Live Call">📞</button>
+    </div>
+
+    <div class="status-text" id="statusText">Click phone button to start speaking</div>
+    <div class="timer" id="callTimer">Duration: 00:00</div>
+
+    <!-- Live Audio Equalizer -->
+    <div class="equalizer-container" id="eqContainer">
+      <div class="eq-bar" id="eq1"></div>
+      <div class="eq-bar" id="eq2"></div>
+      <div class="eq-bar" id="eq3"></div>
+      <div class="eq-bar" id="eq4"></div>
+      <div class="eq-bar" id="eq5"></div>
+    </div>
+
+    <div class="transcript-box" id="transcriptBox">
+      <div style="color: #8b949e; text-align: center; margin-top: 36px;" id="emptyMsg">
+        Audio transcript will stream here once the call begins...
+      </div>
+    </div>
+
+    <div class="guide-box">
+      <div class="guide-title">🗣️ Suggested Inquiries to Speak in UrduLish:</div>
+      <div class="chips">
+        <span class="chip">"Mera DHA Phase 6 mein 1 kanal ghar kitne ka bikega?"</span>
+        <span class="chip">"Mujhe 5 crore ke budget mein DHA Lahore mein ghar chahiye."</span>
+        <span class="chip">"Saturday ko 3 baje inspection visit schedule kar dein."</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const ASSISTANT_ID = "8b0b4889-a60f-404d-8e68-ed8afd91f7db";
+    const PUBLIC_KEY = "9efb9bb5-3fcf-439e-becf-f98742ab98d4";
+
+    let isCallActive = false;
+    let isConnecting = false;
+    let timerInterval = null;
+    let secondsElapsed = 0;
+    let vapi = null;
+    let vapiLoaded = false;
+
+    const callBtn = document.getElementById("callBtn");
+    const statusText = document.getElementById("statusText");
+    const callTimer = document.getElementById("callTimer");
+    const connBadge = document.getElementById("connBadge");
+    const pulseRing = document.getElementById("pulseRing");
+    const transcriptBox = document.getElementById("transcriptBox");
+    const micAlert = document.getElementById("micAlert");
+    const emptyMsg = document.getElementById("emptyMsg");
+    const eqBars = [
+      document.getElementById("eq1"),
+      document.getElementById("eq2"),
+      document.getElementById("eq3"),
+      document.getElementById("eq4"),
+      document.getElementById("eq5"),
+    ];
+
+    function formatTime(s) {
+      const mins = Math.floor(s / 60).toString().padStart(2, "0");
+      const secs = (s % 60).toString().padStart(2, "0");
+      return `Duration: ${mins}:${secs}`;
+    }
+
+    function appendMessage(role, text) {
+      if (emptyMsg && emptyMsg.parentNode) {
+        emptyMsg.remove();
+      }
+      const div = document.createElement("div");
+      div.className = `msg-bubble ${role === "user" ? "user" : "bot"}`;
+      if (role === "user") {
+        div.innerHTML = `<span class="msg-user">👤 You:</span> ${text}`;
+      } else {
+        div.innerHTML = `<span class="msg-bot">🤖 Agent:</span> ${text}`;
+      }
+      transcriptBox.appendChild(div);
+      transcriptBox.scrollTop = transcriptBox.scrollHeight;
+    }
+
+    function updateEqualizer(volume) {
+      // volume is between 0 and 1
+      const val = Math.min(Math.max(volume || 0, 0), 1);
+      eqBars.forEach((bar, idx) => {
+        const factor = 1 - Math.abs(idx - 2) * 0.2;
+        const h = Math.max(4, Math.floor(val * 24 * factor));
+        bar.style.height = `${h}px`;
+        bar.style.backgroundColor = isCallActive ? (val > 0.1 ? "#3fb950" : "#58a6ff") : "#30363d";
+      });
+    }
+
+    function resetEqualizer() {
+      eqBars.forEach((bar) => {
+        bar.style.height = "4px";
+        bar.style.backgroundColor = "#30363d";
+      });
+    }
+
+    // Load Vapi Web SDK dynamically
+    function loadVapiSdk(onReady) {
+      if (window.vapiSDK) {
+        vapiLoaded = true;
+        onReady();
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/gh/VapiAI/html-script-tag@latest/dist/assets/index.js";
+      script.async = true;
+      script.onload = () => {
+        console.log("[Vapi Console] SDK script loaded successfully.");
+        vapiLoaded = true;
+        onReady();
+      };
+      script.onerror = (e) => {
+        console.error("[Vapi Console] Failed to load SDK script", e);
+        statusText.textContent = "Failed to load audio library. Please check your internet connection.";
+        statusText.style.color = "#f85149";
+      };
+      document.head.appendChild(script);
+    }
+
+    function initVapiInstance() {
+      if (vapi) return vapi;
+      if (!window.vapiSDK) return null;
+
+      try {
+        // Initialize Vapi SDK with button positioned off-screen so we control our custom button
+        vapi = window.vapiSDK.run({
+          apiKey: PUBLIC_KEY,
+          assistant: ASSISTANT_ID,
+          config: {
+            position: "bottom-right",
+            offset: "15px",
+            width: "50px",
+            height: "50px",
+            idle: { color: "rgba(0,0,0,0)", type: "round", title: "", subtitle: "", icon: "" }
+          }
+        });
+
+        // Hide the default floating button so only our custom console button is visible
+        setTimeout(() => {
+          const defaultBtns = document.querySelectorAll(".vapi-btn, [class*='vapi-btn']");
+          defaultBtns.forEach(btn => {
+            btn.style.display = "none";
+          });
+        }, 500);
+
+        // Bind events
+        vapi.on("call-start", () => {
+          console.log("[Vapi Console] Call started");
+          isCallActive = true;
+          isConnecting = false;
+          callBtn.className = "call-btn active";
+          callBtn.innerHTML = "⏹️";
+          callBtn.title = "End Call";
+          statusText.textContent = "🎙️ Live Call Active • Speak Now in UrduLish";
+          statusText.style.color = "#3fb950";
+          connBadge.className = "badge active";
+          connBadge.textContent = "🔴 Live Audio Connected";
+          pulseRing.className = "pulse-ring active";
+          micAlert.style.display = "none";
+
+          secondsElapsed = 0;
+          if (timerInterval) clearInterval(timerInterval);
+          timerInterval = setInterval(() => {
+            secondsElapsed++;
+            callTimer.textContent = formatTime(secondsElapsed);
+          }, 1000);
+        });
+
+        vapi.on("call-end", () => {
+          console.log("[Vapi Console] Call ended");
+          isCallActive = false;
+          isConnecting = false;
+          callBtn.className = "call-btn";
+          callBtn.innerHTML = "📞";
+          callBtn.title = "Start Call";
+          statusText.textContent = "Call Ended • Click phone button to start again";
+          statusText.style.color = "#79c0ff";
+          connBadge.className = "badge";
+          connBadge.textContent = "🟢 WebRTC Audio Ready";
+          pulseRing.className = "pulse-ring";
+          resetEqualizer();
+
+          if (timerInterval) clearInterval(timerInterval);
+        });
+
+        vapi.on("speech-start", () => {
+          statusText.textContent = "🤖 Agent is speaking...";
+          statusText.style.color = "#7ee787";
+        });
+
+        vapi.on("speech-end", () => {
+          if (isCallActive) {
+            statusText.textContent = "👂 Listening to you • Speak now...";
+            statusText.style.color = "#58a6ff";
+          }
+        });
+
+        vapi.on("volume-level", (volume) => {
+          if (isCallActive) {
+            updateEqualizer(volume);
+          }
+        });
+
+        vapi.on("message", (msg) => {
+          if (msg.type === "transcript" && msg.transcript) {
+            appendMessage(msg.role, msg.transcript);
+          }
+        });
+
+        vapi.on("error", (err) => {
+          console.error("[Vapi Console Error]", err);
+          isConnecting = false;
+          isCallActive = false;
+          callBtn.className = "call-btn";
+          callBtn.innerHTML = "📞";
+          statusText.textContent = "Connection issue encountered. Click to retry.";
+          statusText.style.color = "#f85149";
+          connBadge.className = "badge";
+          connBadge.textContent = "⚠️ Reconnect Required";
+          pulseRing.className = "pulse-ring";
+          resetEqualizer();
+          if (timerInterval) clearInterval(timerInterval);
+        });
+
+        return vapi;
+      } catch (err) {
+        console.error("[Vapi Console Init Error]", err);
+        return null;
+      }
+    }
+
+    // Preload SDK
+    loadVapiSdk(() => {
+      initVapiInstance();
+    });
+
+    // Handle Call Toggle
+    async function toggleCall() {
+      // Check microphone permission first
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        // Close test track immediately
+        stream.getTracks().forEach(t => t.stop());
+        micAlert.style.display = "none";
+      } catch (micErr) {
+        console.warn("[Vapi Console] Microphone permission check failed:", micErr);
+        micAlert.style.display = "block";
+        statusText.textContent = "Please grant microphone permission to make the call.";
+        statusText.style.color = "#f85149";
+        return;
+      }
+
+      if (isCallActive) {
+        // Stop the call
+        statusText.textContent = "Ending call...";
+        if (vapi && vapi.stop) {
+          vapi.stop();
+        }
+        return;
+      }
+
+      if (isConnecting) return;
+
+      // Start the call
+      isConnecting = true;
+      callBtn.className = "call-btn connecting";
+      callBtn.innerHTML = "⏳";
+      statusText.textContent = "Connecting to Voice Agent (Nova-3)...";
+      statusText.style.color = "#d29922";
+      connBadge.className = "badge connecting";
+      connBadge.textContent = "🟡 Connecting Audio Stream...";
+
+      loadVapiSdk(() => {
+        const instance = initVapiInstance();
+        if (instance && instance.start) {
+          try {
+            instance.start(ASSISTANT_ID);
+          } catch (startErr) {
+            console.error("[Vapi Start Error]", startErr);
+            isConnecting = false;
+            callBtn.className = "call-btn";
+            callBtn.innerHTML = "📞";
+            statusText.textContent = "Error starting call. Check console or click retry.";
+            statusText.style.color = "#f85149";
+          }
+        } else {
+          // If instance not available yet, click default button
+          const defBtn = document.querySelector(".vapi-btn, [class*='vapi-btn']");
+          if (defBtn) defBtn.click();
+        }
+      });
+    }
+
+    callBtn.addEventListener("click", toggleCall);
+  </script>
+</body>
+</html>
