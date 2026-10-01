@@ -265,6 +265,27 @@ class TestDay5LangGraphAgent(unittest.TestCase):
         self.assertNotIn("budget", turn2.get("final_response", "").lower())
         self.assertIn("crore", turn2.get("final_response", "").lower())
 
+    def test_task4_seller_to_buyer_dynamic_transition(self):
+        """Verify dynamic shift: seller valuation -> ok -> buyer recommendation options."""
+        sid = "test_seller_to_buyer_dynamic"
+        t1 = run_agent_turn("mein ghar bechna chahta hun", session_id=sid)
+        self.assertEqual(t1.get("intent"), "valuation")
+        self.assertEqual(t1.get("last_node"), "ClarificationNode")
+
+        t2 = run_agent_turn("DHA PHASE 6 mein ha Lahore mein or 20 marla ka ha", current_state=t1, session_id=sid)
+        self.assertEqual(t2.get("intent"), "valuation")
+        self.assertEqual(t2.get("last_node"), "ValuationNode")
+        self.assertIn("crore", t2.get("final_response", "").lower())
+
+        t3 = run_agent_turn("ok", current_state=t2, session_id=sid)
+        self.assertEqual(t3.get("intent"), "goodbye")
+        self.assertEqual(t3.get("last_node"), "GoodbyeNode")
+
+        t4 = run_agent_turn("acha mujhy dha mein 10 marla ky options bhi bta do mein ny kharedna ha ghar", current_state=t3, session_id=sid)
+        self.assertEqual(t4.get("intent"), "recommendation")
+        self.assertEqual(t4.get("last_node"), "RecommendationNode")
+        self.assertIn("option", t4.get("final_response", "").lower())
+
     def test_task4_post_call_lead_scoring_and_hot_lead_email_alert(self):
         """Verify post-call lead scoring evaluates conversion probability and flags hot leads."""
         from tools.ml_tools import score_voice_call_lead

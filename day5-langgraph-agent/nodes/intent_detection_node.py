@@ -150,6 +150,8 @@ INVALID_NAMES = {
 NO_BUDGET_CUES = (
     "budget ka masla nahi", "budget ka issue nahi", "koi specific budget nahi", "no budget",
     "just show", "list dikha", "properties dikhao", "options dikhao", "options dikha dein",
+    "options bhi bta do", "options bta do", "options bata do", "options btao", "options chahiye",
+    "options dekhne", "options bataiye", "options bta",
     "jo available hain dikha do", "list dikha dein", "aise hi dikhao", "dikhayein", "dikhao",
     "بس لسٹ دکھا دو", "آپشنز دکھاؤ", "آپشن دکھا دیں", "کوئی بجٹ نہیں", "بجٹ کا مسئلہ نہیں",
     "لسٹ دکھا دو", "لسٹ دکھائیں", "دکھا دیں", "دکھاؤ"
@@ -700,12 +702,12 @@ def _classify_intent(text: str, state: AgentState, extracted: Dict[str, Any]) ->
     prev_intent = state.get("intent", "")
     prefs = state.get("property_preferences", {})
 
-    # Check if we are actively in a valuation clarification flow or user is selling
-    is_valuation_context = (
-        prev_intent == "valuation"
-        or (isinstance(last_clarif, str) and last_clarif.startswith("valuation"))
-        or prefs.get("purpose") in ("sell", "bechna")
-        or extracted.get("purpose") in ("sell", "bechna")
+    # Check if user is actively answering a valuation clarification question
+    is_answering_val_clarif = (
+        isinstance(last_clarif, str)
+        and last_clarif.startswith("valuation")
+        and state.get("last_node") == "ClarificationNode"
+        and not any(w in t for w in ("khareedna", "kharedna", "kharidna", "buy", "rent", "option", "options", "cancel", "bye"))
     )
 
     if last_clarif == "appointment_id" or appt.get("id_asked_flag"):
@@ -743,7 +745,11 @@ def _classify_intent(text: str, state: AgentState, extracted: Dict[str, Any]) ->
         "shukriya", "shukria", "thanks", "thank you", "done", "perfect", "great", "bohat shukriya",
         "اوکے", "ٹھیک ہے", "شکریہ", "بہت شکریہ"
     )
-    if appt.get("status") in ("scheduled", "rescheduled") and (t in ack_cues or any(t == w for w in ack_cues) or any(t.startswith(f"{w} ") for w in ack_cues)):
+    is_bare_ack = t in ack_cues or any(t == w for w in ack_cues) or any(t.startswith(f"{w} ") and len(t.split()) <= 2 for w in ack_cues)
+    if is_bare_ack and (
+        appt.get("status") in ("scheduled", "rescheduled")
+        or state.get("last_node") in ("ValuationNode", "RAGNode", "BookingNode", "CancellationNode", "ReschedulingNode")
+    ):
         return "goodbye"
 
     goodbye_cues = [
@@ -774,7 +780,18 @@ def _classify_intent(text: str, state: AgentState, extracted: Dict[str, Any]) ->
     if any(w in t for w in email_cues):
         return "email"
 
-    # 6b. Property Valuation & Price Prediction cues (Mera ghar kitne ka bikega?)
+    # 6b. Explicit Buy / Rental / Property Search cues (Switching to property recommendations)
+    recommendation_cues = (
+        "options", "option", "properties", "property", "listings",
+        "khareedna", "kharedna", "khareedne", "kharedne", "kharidna", "kharidne", "khareedni", "kharedni",
+        "buy", "purchase", "rent par", "kiraye par", "rent pe", "rent pr",
+        "ghar chahiye", "flat chahiye", "plot chahiye", "options bata", "options bta", "options dikha",
+        "options btao", "options bhi", "dekhna chahta", "lena chahta", "lena hai", "lene hain",
+        "آپشن", "آپشنز", "خریدنا", "خریدنے", "دکھائیں", "دکھاؤ", "چاہیے"
+    )
+    is_explicit_recommendation = any(w in t for w in recommendation_cues)
+
+    # 6c. Property Valuation & Price Prediction cues (Mera ghar kitne ka bikega?)
     valuation_cues = (
         "bikega", "biky ga", "bikay ga", "bikegi", "bikega?", "kitne ka bikega", "kitne mein bikega",
         "kitne me bikega", "mera ghar kitne ka", "mera ghar kitne", "ghar kitne ka bikega", "plot kitne ka bikega",
@@ -787,8 +804,11 @@ def _classify_intent(text: str, state: AgentState, extracted: Dict[str, Any]) ->
         "بکے گا", "کتنے کا بکے گا", "بیچنا", "قیمت کیا ہے", "مارکیٹ ویلیو", "ویلیوایشن", "کتنے کا بک جائے گا",
         "بیچنا چاہتا ہوں", "گھر بیچنا", "بیچنا ہے", "بیچنی ہے", "سیل کرنا ہے", "سیل کرنا چاہتا ہوں", "فروخت کرنا"
     )
-    if any(w in t for w in valuation_cues):
+    if any(w in t for w in valuation_cues) and not is_explicit_recommendation:
         return "valuation"
+
+    if is_explicit_recommendation:
+        return "recommendation"
 
     # 7. RAG / Amenities / Schools / Hospitals / FAQ inquiry cues
     rag_cues = (
@@ -815,8 +835,8 @@ def _classify_intent(text: str, state: AgentState, extracted: Dict[str, Any]) ->
     if has_greeting_cue and not any(c in t for c in criteria_cues) and not extracted:
         return "greeting"
 
-    # 8b. Active Valuation Qualification: User is answering city/society/marla for their property valuation
-    if is_valuation_context:
+    # 8b. Active Valuation Clarification: User is specifically answering missing city/society/marla for valuation
+    if is_answering_val_clarif:
         return "valuation"
 
     # 9. Learned fallback (Day 5.5)
@@ -1156,13 +1176,15 @@ def intent_detection_node(state: AgentState) -> Dict[str, Any]:
             current_clarification = ""
 
     elif intent == "recommendation":
-        # Guardrail: If user is selling, keep them in valuation flow and DO NOT ask for buyer budget!
-        is_val_ctx = (
-            state.get("intent") == "valuation"
-            or (isinstance(state.get("last_clarification_type"), str) and str(state.get("last_clarification_type", "")).startswith("valuation"))
-            or prefs.get("purpose") in ("sell", "bechna")
+        # Guardrail: Only treat as valuation if user was in active clarification AND did NOT express buying/options
+        has_buy_or_search = any(w in t_raw for w in ("khareedna", "kharedna", "kharidna", "buy", "rent", "option", "options", "chahiye", "dikhao", "bata", "bta"))
+        is_answering_val = (
+            state.get("last_node") == "ClarificationNode"
+            and isinstance(state.get("last_clarification_type"), str)
+            and str(state.get("last_clarification_type", "")).startswith("valuation")
+            and not has_buy_or_search
         )
-        if prefs.get("purpose") in ("sell", "bechna") or is_val_ctx:
+        if (prefs.get("purpose") in ("sell", "bechna") and not has_buy_or_search) or is_answering_val:
             intent = "valuation"
             prefs["purpose"] = "sell"
             if not prefs.get("city"):
