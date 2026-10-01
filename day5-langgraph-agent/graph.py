@@ -21,6 +21,7 @@ from nodes import (
     rag_node,
     recommendation_node,
     rescheduling_node,
+    valuation_node,
 )
 from state import AgentState, create_initial_state
 
@@ -43,6 +44,7 @@ def route_after_intent(state: AgentState) -> str:
         "rag": "rag",
         "email": "email",
         "goodbye": "goodbye",
+        "valuation": "valuation",
         "off_topic": "clarification",
     }
     return routing_map.get(intent, "greeting")
@@ -63,6 +65,7 @@ def build_realestate_graph(checkpointer: Optional[Any] = None) -> Any:
     builder.add_node("rag", rag_node)
     builder.add_node("email", email_node)
     builder.add_node("goodbye", goodbye_node)
+    builder.add_node("valuation", valuation_node)
 
     # 2. Add entry edge
     builder.add_edge(START, "intent_detection")
@@ -81,6 +84,7 @@ def build_realestate_graph(checkpointer: Optional[Any] = None) -> Any:
             "rag": "rag",
             "email": "email",
             "goodbye": "goodbye",
+            "valuation": "valuation",
         },
     )
 
@@ -94,6 +98,7 @@ def build_realestate_graph(checkpointer: Optional[Any] = None) -> Any:
     builder.add_edge("rag", END)
     builder.add_edge("email", END)
     builder.add_edge("goodbye", END)
+    builder.add_edge("valuation", END)
 
     # Compile with memory checkpointer
     cp = checkpointer if checkpointer is not None else MemorySaver()

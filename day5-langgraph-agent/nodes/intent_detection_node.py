@@ -756,6 +756,18 @@ def _classify_intent(text: str, state: AgentState, extracted: Dict[str, Any]) ->
     if any(w in t for w in email_cues):
         return "email"
 
+    # 6b. Property Valuation & Price Prediction cues (Mera ghar kitne ka bikega?)
+    valuation_cues = (
+        "bikega", "biky ga", "bikay ga", "bikegi", "bikega?", "kitne ka bikega", "kitne mein bikega",
+        "kitne me bikega", "mera ghar kitne ka", "mera ghar kitne", "ghar kitne ka bikega", "plot kitne ka bikega",
+        "flat kitne ka bikega", "kitne ka sell hoga", "kitne mein sell hoga", "valuation", "worth",
+        "market value", "market price", "price prediction", "qeemat kitni", "kitni qeemat", "andazan qeemat",
+        "kitne ka hoga", "kitne ka sale hoga", "bechna hai", "bechnay", "bechni",
+        "بکے گا", "کتنے کا بکے گا", "بیچنا", "قیمت کیا ہے", "مارکیٹ ویلیو", "ویلیوایشن", "کتنے کا بک جائے گا"
+    )
+    if any(w in t for w in valuation_cues):
+        return "valuation"
+
     # 7. RAG / Amenities / Schools / Hospitals / FAQ inquiry cues
     rag_cues = (
         "document", "dastawaiz", "registry", "transfer", "procedure", "process",
@@ -1085,6 +1097,39 @@ def intent_detection_node(state: AgentState) -> Dict[str, Any]:
             clarification_needed = True
             clarification_prompt = "Baraye meherbani apna shubh naam bataiye taake hum appointment aap ke naam par confirm kar sakein."
             current_clarification = "booking_name"
+        else:
+            clarification_needed = False
+            current_clarification = ""
+
+    elif intent == "valuation":
+        # Property Price Prediction qualification
+        # Extract default locality if mentioned loosely in text
+        if not prefs.get("locality"):
+            if "dha" in t_raw:
+                prefs["locality"] = "DHA Phase 6"
+            elif "bahria" in t_raw:
+                prefs["locality"] = "Bahria Town"
+            elif "f-10" in t_raw or "f10" in t_raw:
+                prefs["locality"] = "F-10"
+            elif "gulberg" in t_raw:
+                prefs["locality"] = "Gulberg"
+
+        if not prefs.get("city"):
+            prefs["city"] = "Lahore"
+
+        # Check if caller specified locality and size
+        if not prefs.get("locality") and prefs.get("area_marla") is None:
+            clarification_needed = True
+            clarification_prompt = "Ji bilkul, accurate valuation ke liye baraye meherbani batayein ke aap ka ghar kis city, society mein hai aur kitne marla ka hai?"
+            current_clarification = "valuation_details"
+        elif not prefs.get("locality"):
+            clarification_needed = True
+            clarification_prompt = f"Aap ka {int(prefs.get('area_marla', 20))} marla ghar kis city aur society mein waqia hai?"
+            current_clarification = "valuation_locality"
+        elif prefs.get("area_marla") is None:
+            clarification_needed = True
+            clarification_prompt = f"Janab, {prefs['locality']} mein aap ka ghar kitne marla ya kanal ka hai?"
+            current_clarification = "valuation_size"
         else:
             clarification_needed = False
             current_clarification = ""

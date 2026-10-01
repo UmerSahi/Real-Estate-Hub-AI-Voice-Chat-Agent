@@ -11,6 +11,7 @@ from nodes.cancellation_node import cancellation_node
 from nodes.rag_node import rag_node
 from nodes.email_node import email_node
 from nodes.goodbye_node import goodbye_node
+from nodes.valuation_node import valuation_node
 
 __all__ = [
     "greeting_node",
@@ -23,4 +24,5 @@ __all__ = [
     "rag_node",
     "email_node",
     "goodbye_node",
+    "valuation_node",
 ]
