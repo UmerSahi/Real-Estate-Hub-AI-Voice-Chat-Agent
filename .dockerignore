@@ -1,0 +1,25 @@
+# Dependency and build artifacts
+**/node_modules
+frontend/node_modules
+frontend/dist
+**/.venv
+**/env
+**/venv
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/.pytest_cache
+**/.coverage
+
+# Git and IDE metadata
+.git
+.github
+.gitignore
+.vscode
+.idea
+
+# Temporary runtime storage
+day5-langgraph-agent/traces
+day5-langgraph-agent/*.log
+realestate-hub/storage/calendar
+realestate-hub/storage/emails

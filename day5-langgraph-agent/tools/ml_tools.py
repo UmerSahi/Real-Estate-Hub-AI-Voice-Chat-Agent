@@ -24,6 +24,9 @@ logger = logging.getLogger("LangGraphMLTools")
 
 # Add Week 8 Day 4 to sys.path so we can directly utilize pre-trained models
 _CANDIDATE_DIRS = [
+    Path("/app/Week 8/Day 4"),
+    Path("/app/week8/Day 4"),
+    Path(__file__).resolve().parent.parent.parent / "Week 8" / "Day 4",
     Path(__file__).resolve().parent.parent.parent.parent / "Week 8" / "Day 4",
     Path.cwd() / "Week 8" / "Day 4",
     Path.cwd().parent / "Week 8" / "Day 4",
