@@ -39,6 +39,14 @@
   - Task 5: Production Guardrails & Governance (OOD Bounding, Prompt Injection Defense Shield, Legal Disclaimers, SQLite Audit Logging)
   - Execution: [run_day4.py](file:///c:/Users/PMYLS/Downloads/realestate-hub%20vapi%20and%20deepgram/Week%208/Day%204/run_day4.py) & [system_architecture.md](file:///c:/Users/PMYLS/Downloads/realestate-hub%20vapi%20and%20deepgram/Week%208/Day%204/architecture/system_architecture.md)
 
+- 📁 [**Day 5: Stakeholder Presentation & Comprehensive Documentation**](file:///c:/Users/PMYLS/Downloads/realestate-hub%20vapi%20and%20deepgram/Week%208/Day%205/README.md)
+  - Task 1: Executive Stakeholder Presentation (14-Slide Widescreen PPTX, Interactive HTML5 Deck, Marp Markdown)
+  - Task 2: Comprehensive Technical Documentation Suite (9 In-Depth Engineering Guides, ~7,000 Words)
+  - Task 3: Financial ROI Model & Commercial Economics (2.50x Conversion Lift, 1.92 Cr Saved)
+  - Task 4: Enterprise Governance, Safeguards & Luxury Appraisal Policy Gate (> 7.0 Cr Human Review)
+  - Task 5: Automated Capstone Test Suite Execution (100% Passing Coverage across all deliverables)
+  - Execution: [run_day5.py](file:///c:/Users/PMYLS/Downloads/realestate-hub%20vapi%20and%20deepgram/Week%208/Day%205/run_day5.py) & [presentation/index.html](file:///c:/Users/PMYLS/Downloads/realestate-hub%20vapi%20and%20deepgram/Week%208/Day%205/presentation/index.html)
+
 ---
 
 ## 🚀 Daily Quickstarts
@@ -75,3 +83,12 @@ python run_day4.py
 uvicorn src.api:app --reload --port 8000
 streamlit run dashboard/app.py
 ```
+
+### Day 5 Execution
+```bash
+cd "Week 8\Day 5"
+python run_day5.py
+python -m unittest tests/test_day5_capstone.py
+start presentation/index.html
+```
+

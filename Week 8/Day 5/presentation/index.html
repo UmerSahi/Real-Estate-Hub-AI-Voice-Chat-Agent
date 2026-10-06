@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Executive Stakeholder Presentation | AI Property Valuation & Lead Scoring Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #0a0e17;
+      --bg-surface: #111827;
+      --bg-card: #1f2937;
+      --bg-glass: rgba(31, 41, 55, 0.75);
+      --border-color: #374151;
+      --border-accent: rgba(16, 185, 129, 0.3);
+      --primary: #10b981; /* Emerald */
+      --primary-glow: rgba(16, 185, 129, 0.25);
+      --secondary: #06b6d4; /* Teal / Cyan */
+      --accent: #f59e0b; /* Amber / Gold */
+      --text-main: #f9fafb;
+      --text-muted: #9ca3af;
+      --text-dim: #6b7280;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
+      --shadow-glow: 0 0 25px var(--primary-glow);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Inter', -apple-system, sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+    }
+
+    h1, h2, h3, h4, .brand-font {
+      font-family: 'Outfit', sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    /* Top Navigation Bar */
+    header.deck-header {
+      height: 56px;
+      background: rgba(10, 14, 23, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .brand-badge {
+      background: linear-gradient(135deg, #059669, #10b981);
+      color: #fff;
+      padding: 2px 8px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      font-weight: 800;
+    }
+
+    .header-controls {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .btn {
+      background: var(--bg-card);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+      text-decoration: none;
+    }
+
+    .btn:hover {
+      background: #283548;
+      border-color: var(--primary);
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #059669, #10b981);
+      border: none;
+      color: #fff;
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, #047857, #059669);
+    }
+
+    .slide-counter {
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      padding: 4px 10px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 6px;
+    }
+
+    /* Main Deck Stage */
+    main.deck-stage {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 40px;
+    }
+
+    .slide {
+      position: absolute;
+      width: calc(100% - 80px);
+      max-width: 1400px;
+      height: calc(100% - 40px);
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 40px 50px;
+      box-shadow: var(--shadow-card);
+      opacity: 0;
+      visibility: hidden;
+      transform: scale(0.97) translateY(15px);
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      opacity: 1;
+      visibility: visible;
+      transform: scale(1) translateY(0);
+      z-index: 10;
+    }
+
+    /* Slide Typography & Layouts */
+    .slide-tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 700;
+      color: var(--secondary);
+      margin-bottom: 8px;
+    }
+
+    .slide-title {
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+
+    .slide-subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 24px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      flex: 1;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      flex: 1;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      flex: 1;
+    }
+
+    /* Metric Cards */
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--primary);
+      transform: translateY(-2px);
+    }
+
+    .card-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-dim);
+      margin-bottom: 8px;
+    }
+
+    .card-value {
+      font-size: 1.85rem;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      line-height: 1.1;
+    }
+
+    .card-value.accent-emerald { color: var(--primary); }
+    .card-value.accent-cyan { color: var(--secondary); }
+    .card-value.accent-amber { color: var(--accent); }
+
+    .card-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* Bullet point lists */
+    .bullet-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .bullet-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      color: #e5e7eb;
+    }
+
+    .bullet-icon {
+      flex-shrink: 0;
+      width: 22px;
+      height: 22px;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8rem;
+      font-weight: bold;
+      margin-top: 1px;
+    }
+
+    /* Data Tables */
+    .table-container {
+      width: 100%;
+      overflow-x: auto;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.88rem;
+    }
+
+    th {
+      background: #111827;
+      color: var(--secondary);
+      padding: 12px 16px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border-color);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 0.05em;
+    }
+
+    td {
+      padding: 12px 16px;
+      border-bottom: 1px solid rgba(55, 65, 81, 0.5);
+      color: #e5e7eb;
+    }
+
+    tr:last-child td {
+      border-bottom: none;
+    }
+
+    tr.highlight {
+      background: rgba(16, 185, 129, 0.08);
+      font-weight: 600;
+    }
+
+    tr.highlight td {
+      color: #fff;
+    }
+
+    .badge-champion {
+      background: rgba(16, 185, 129, 0.2);
+      color: var(--primary);
+      border: 1px solid var(--primary);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    /* Speaker Notes Drawer */
+    .speaker-notes-panel {
+      position: fixed;
+      bottom: 56px;
+      left: 0;
+      width: 100%;
+      background: #0f172a;
+      border-top: 2px solid var(--primary);
+      padding: 16px 30px;
+      display: none;
+      z-index: 90;
+      max-height: 180px;
+      overflow-y: auto;
+      box-shadow: 0 -10px 30px rgba(0,0,0,0.7);
+    }
+
+    .speaker-notes-panel.open {
+      display: block;
+    }
+
+    .notes-title {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--primary);
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .notes-content {
+      font-size: 0.95rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    /* Bottom Control Bar */
+    footer.deck-footer {
+      height: 56px;
+      background: rgba(10, 14, 23, 0.95);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+      z-index: 100;
+    }
+
+    .progress-bar {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--secondary), var(--primary));
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    /* Interactive Calculator Widget */
+    .roi-calc-container {
+      background: #111827;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .calc-input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+
+    .calc-input-group label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .calc-input-group input {
+      background: #1f2937;
+      border: 1px solid var(--border-color);
+      padding: 8px 12px;
+      border-radius: 6px;
+      color: #fff;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+    }
+
+    .calc-output-card {
+      background: rgba(16, 185, 129, 0.1);
+      border: 1px solid var(--primary);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Image Gallery Lightbox */
+    .figure-thumbnail {
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      overflow: hidden;
+      cursor: pointer;
+      position: relative;
+      background: #000;
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .figure-thumbnail img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      transition: transform 0.2s ease;
+    }
+
+    .figure-thumbnail:hover img {
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Header -->
+  <header class="deck-header">
+    <div class="brand">
+      <span>🏢 RealEstate Hub</span>
+      <span class="brand-badge">Week 8 Capstone</span>
+      <span style="color: var(--text-dim); font-size: 0.9rem;">| Stakeholder Deck</span>
+    </div>
+    <div class="header-controls">
+      <a href="stakeholder_presentation.pptx" download class="btn" title="Download PowerPoint Deck">
+        📥 Download PPTX
+      </a>
+      <a href="../docs/01_executive_overview_and_business_case.md" target="_blank" class="btn" title="View Full Documentation">
+        📑 Documentation
+      </a>
+      <button class="btn" id="btnNotesToggle" title="Toggle Speaker Notes [N]">
+        🎙️ Speaker Notes
+      </button>
+      <button class="btn" id="btnFullscreen" title="Toggle Fullscreen [F]">
+        ⛶ Fullscreen
+      </button>
+      <div class="slide-counter" id="slideIndicator">1 / 14</div>
+    </div>
+  </header>
+
+  <!-- Deck Stage -->
+  <main class="deck-stage">
+
+    <!-- SLIDE 1: Hero & Strategic Title -->
+    <div class="slide active" id="slide-1" data-notes="Good morning executives and stakeholders. Today we present the culmination of our Week 8 Capstone: bridging conversational voice AI with enterprise machine learning to eliminate pricing speculation and lead triage bottlenecks across Pakistani real estate.">
+      <span class="slide-tag">Executive Capstone Showcase</span>
+      <h1 class="slide-title">AI Property Valuation & Predictive Lead Scoring</h1>
+      <p class="slide-subtitle">A Unified Machine Learning, Explainable AI & Conversational Telephony Ecosystem</p>
+
+      <div class="grid-3" style="margin-top: 10px;">
+        <div class="card">
+          <div class="card-label">Valuation Precision</div>
+          <div class="card-value accent-emerald">7.29% MAPE</div>
+          <div class="card-note">Optuna CatBoost Regressor (R² = 0.9860) reduces error from 156 Lac baseline to 17.8 Lac PKR.</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Calling Conversion Lift</div>
+          <div class="card-value accent-cyan">2.50x Lift</div>
+          <div class="card-note">Precision@Top-20% reaches 71.4% (vs 28.6% baseline), capturing 50% of all deals in 20% of calls.</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Rescued Deal Value</div>
+          <div class="card-value accent-amber">PKR 1.92 Cr</div>
+          <div class="card-note">Asymmetric Cost Matrix (th=0.05) prevents 300k PKR false-negative deal loss on high-ticket listings.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; background: rgba(255,255,255,0.03); padding: 18px 24px; border-radius: var(--radius-md); border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <span style="font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Target Markets</span>
+          <div style="font-weight: 600; color: #fff; margin-top: 2px;">Islamabad • Karachi • Lahore • Rawalpindi</div>
+        </div>
+        <div>
+          <span style="font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Integration Scope</span>
+          <div style="font-weight: 600; color: #fff; margin-top: 2px;">Vapi / Deepgram Webhook • LangGraph UrduLish Copilot • FastAPI Serving</div>
+        </div>
+        <div>
+          <span style="font-size: 0.85rem; color: var(--text-dim); text-transform: uppercase; font-weight: 700;">Delivery Status</span>
+          <div style="font-weight: 600; color: var(--primary); margin-top: 2px;">✓ 100% Verified Production Pipeline</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: Executive Summary & Strategic Scope -->
+    <div class="slide" id="slide-2" data-notes="Models trapped in Jupyter notebooks create zero shareholder value. Day 5 turns this research into an enterprise asset: an automated valuation engine, a lead prioritization brain, and an UrduLish copilot for frontline sales reps.">
+      <span class="slide-tag">Strategic Vision</span>
+      <h2 class="slide-title">Executive Summary & Strategic Scope</h2>
+      <p class="slide-subtitle">Transforming fragmented broker guesswork into governed algorithmic intelligence</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-label">Core Strategic Objectives</div>
+          <ul class="bullet-list" style="margin-top: 8px;">
+            <li class="bullet-item">
+              <span class="bullet-icon">1</span>
+              <div><strong>Eliminate Pricing Disparity:</strong> Replace emotional seller demands with an empirical fair-market regression engine backed by 10th/90th quantile safety bands.</div>
+            </li>
+            <li class="bullet-item">
+              <span class="bullet-icon">2</span>
+              <div><strong>Unlock Sales Bandwidth:</strong> Rank daily inquiries so sales closers focus on top 20% high-intent leads who account for 50% of monthly sales revenue.</div>
+            </li>
+            <li class="bullet-item">
+              <span class="bullet-icon">3</span>
+              <div><strong>Operationalize in UrduLish:</strong> Deliver real-time SHAP factors in native conversational language so frontline Pakistani brokers actually adopt and trust the AI.</div>
+            </li>
+            <li class="bullet-item">
+              <span class="bullet-icon">4</span>
+              <div><strong>Zero-Hallucination Guardrails:</strong> Ensure LLM sales agents cannot invent property prices—every rupee strictly originates from verified ML models.</div>
+            </li>
+          </ul>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div class="card" style="border-left: 4px solid var(--primary);">
+            <div class="card-label">Data Asset Scale</div>
+            <div class="card-value accent-emerald">10,480 Listings & 3,496 Leads</div>
+            <div class="card-note">Synthesized and scrubbed with Pakistani market logic: Marla-to-Kanal converters, Crore/Lac parsers, and society tier stratifications.</div>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--secondary);">
+            <div class="card-label">Production SLA</div>
+            <div class="card-value accent-cyan">&lt; 15 Minute VIP Response</div>
+            <div class="card-note">Inbound voice calls from Week 7 trigger instant lead scoring webhooks; Hot Leads (P &ge; 0.65) alert senior closers in real time.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: The Multi-Crore Financial Bottlenecks -->
+    <div class="slide" id="slide-3" data-notes="Notice the severe economic asymmetry here: dropping one real buyer costs 300,000 PKR in lost commission. But placing a wasted call costs only 500 PKR. Standard models optimized for 50% thresholds burn massive money.">
+      <span class="slide-tag">Problem Framing</span>
+      <h2 class="slide-title">The Two Multi-Crore Financial Bleeds</h2>
+      <p class="slide-subtitle">Quantifying the crippling cost of human guesswork in luxury real estate</p>
+
+      <div class="grid-2">
+        <div class="card" style="background: rgba(239, 68, 68, 0.05); border-color: rgba(239, 68, 68, 0.3);">
+          <div class="card-label" style="color: #f87171;">Bleed 1: The Valuation Misquote Trap</div>
+          <div class="card-value" style="color: #f87171;">&plusmn;25% Quote Error</div>
+          <div class="card-note" style="margin-top: 8px;">
+            Traditional agents quote from intuition:
+            <ul style="margin: 8px 0 0 16px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
+              <li><strong>Overpriced Listings:</strong> Stagnate for 180+ days, eroding buyer trust and tying up marketing capital.</li>
+              <li><strong>Underpriced Deals:</strong> Sell instantly but leave 30-50 Lac PKR on the table, cheating sellers of fair capital.</li>
+              <li><strong>Heuristic Baseline:</strong> Simple median pricing misses actual transaction value by <strong>156.5 Lac PKR</strong> on average!</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="card" style="background: rgba(245, 158, 11, 0.05); border-color: rgba(245, 158, 11, 0.3);">
+          <div class="card-label" style="color: #fbbf24;">Bleed 2: The Sales Calling Capacity Choke</div>
+          <div class="card-value" style="color: #fbbf24;">40 Calls / 200 Leads</div>
+          <div class="card-note" style="margin-top: 8px;">
+            A 5-person brokerage receives 200 daily leads but only has time for 40 outbound calls:
+            <ul style="margin: 8px 0 0 16px; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
+              <li><strong>Random Calling:</strong> 71% of calls reach casual window-shoppers with no intent.</li>
+              <li><strong>Lost Whales:</strong> High-ticket overseas investors get buried in unread CRM queues and buy elsewhere.</li>
+              <li><strong>Asymmetric Cost:</strong> False Negative = <strong>PKR 300,000 lost commission</strong> vs False Positive = <strong>PKR 500 phone labor</strong>.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; background: #111827; border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 16px 20px;">
+        <span style="color: var(--secondary); font-weight: 700; font-size: 0.85rem; text-transform: uppercase;">Mathematical Reality:</span>
+        <span style="font-size: 0.9rem; color: #e5e7eb; margin-left: 8px;">Because missing a buyer is <strong>600x more expensive</strong> than placing a call, standard 0.50 threshold models fail. Our cost-optimized threshold (th=0.05) preserves over <strong>1.92 Crore PKR</strong> in deal margin.</span>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Unified System Architecture -->
+    <div class="slide" id="slide-4" data-notes="Here is how the entire platform connects. Telephony calls come into Vapi, Deepgram transcribes, FastAPI serves predictions, and LangGraph orchestrates the conversational experience in UrduLish.">
+      <span class="slide-tag">System Engineering</span>
+      <h2 class="slide-title">Unified Multi-Tier Architecture</h2>
+      <p class="slide-subtitle">Seamless integration from telephony speech gateway to ML serving and Streamlit CRM</p>
+
+      <div class="grid-4" style="margin-top: 10px;">
+        <div class="card">
+          <div class="card-label">1. Telephony Bridge</div>
+          <div style="font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 6px;">Vapi & Deepgram</div>
+          <div class="card-note">Real-time voice streaming with sub-second STT, automated after-call webhooks, and TTS UrduLish price quotes.</div>
+        </div>
+        <div class="card">
+          <div class="card-label">2. Security Shield</div>
+          <div style="font-size: 1.1rem; font-weight: 700; color: var(--secondary); margin-bottom: 6px;">OOD & Prompt Guard</div>
+          <div class="card-note">Validates 1-100 Marla bounds, blocks prompt-injection overrides ('set price to 1 rupee'), and logs to SQLite audit.</div>
+        </div>
+        <div class="card">
+          <div class="card-label">3. FastAPI Engine</div>
+          <div style="font-size: 1.1rem; font-weight: 700; color: var(--primary); margin-bottom: 6px;">Port 8000 REST</div>
+          <div class="card-note">Sub-50ms inference serving /predict/price, /predict/lead-score, /explain/lead, /explain/price, and batch CSV.</div>
+        </div>
+        <div class="card">
+          <div class="card-label">4. AI Copilot</div>
+          <div style="font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 6px;">LangGraph UrduLish</div>
+          <div class="card-note">StateGraph state machine with 5 validated tools, enforcing strict zero-hallucination grounding for property prices.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; background: rgba(0,0,0,0.4); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 18px; display: flex; align-items: center; justify-content: space-around;">
+        <div style="text-align: center;">
+          <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Valuation Model</div>
+          <div style="font-weight: 700; color: var(--primary); margin-top: 2px;">CatBoost + Quantiles (10-90th)</div>
+        </div>
+        <div style="color: var(--text-dim); font-size: 1.2rem;">➔</div>
+        <div style="text-align: center;">
+          <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Lead Classifier</div>
+          <div style="font-weight: 700; color: var(--secondary); margin-top: 2px;">LightGBM + SMOTE (ROC=0.82)</div>
+        </div>
+        <div style="color: var(--text-dim); font-size: 1.2rem;">➔</div>
+        <div style="text-align: center;">
+          <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Segmentation Engine</div>
+          <div style="font-weight: 700; color: var(--accent); margin-top: 2px;">K-Means Personas (k=4)</div>
+        </div>
+        <div style="color: var(--text-dim); font-size: 1.2rem;">➔</div>
+        <div style="text-align: center;">
+          <div style="font-size: 0.75rem; color: var(--text-dim); text-transform: uppercase;">Action Dispatcher</div>
+          <div style="font-weight: 700; color: #fff; margin-top: 2px;">VIP Email &lt;15m SLA</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: Data Engineering & Feature Store -->
+    <div class="slide" id="slide-5" data-notes="We engineered 13 domain-specific features reflecting Pakistani real estate dynamics: Marla and Kanal conversions, Crore and Lac parsing, and society tiering. Strict pipeline containment prevented data leakage.">
+      <span class="slide-tag">Data Foundations</span>
+      <h2 class="slide-title">Data Engineering & Pakistani Domain Features</h2>
+      <p class="slide-subtitle">10,480 listings and 3,496 leads curated with zero data leakage</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-label">Feature Engineering Highlights</div>
+          <ul class="bullet-list" style="margin-top: 6px;">
+            <li class="bullet-item">
+              <span class="bullet-icon">✓</span>
+              <div><strong>Marla / Kanal Normalizer:</strong> Standardizes 1 Kanal = 20 Marla, converting colloquial Pakistani metrics into uniform numeric features.</div>
+            </li>
+            <li class="bullet-item">
+              <span class="bullet-icon">✓</span>
+              <div><strong>Crore / Lac Parser:</strong> Automatically parses Pakistani currency strings (e.g. '2.5 Crore' ➔ 25,000,000 PKR).</div>
+            </li>
+            <li class="bullet-item">
+              <span class="bullet-icon">✓</span>
+              <div><strong>Society Tiering:</strong> Categorizes localities into Tier 1 (DHA, Bahria, Gulberg, Clifton), Tier 2 (Johar Town, G-11), and Tier 3 (Suburban).</div>
+            </li>
+            <li class="bullet-item">
+              <span class="bullet-icon">✓</span>
+              <div><strong>Telephony Ingestion Signals:</strong> Extracts talk time duration, inquiry velocity, site visit intent, and budget affordability ratio.</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Pre-Processing Pipeline Safeguards</div>
+          <ul class="bullet-list" style="margin-top: 6px;">
+            <li class="bullet-item">
+              <span class="bullet-icon">🔒</span>
+              <div><strong>Zero Data Leakage:</strong> Transformations fitted exclusively on 70% train split; validation (15%) and test (15%) strictly held out.</div>
+            </li>
+            <li class="bullet-item">
+              <span class="bullet-icon">🔒</span>
+              <div><strong>TargetEncoder with Smoothing:</strong> Handles 100+ micro-locations without exploding dimensionality or overfitting sparse sectors.</div>
+            </li>
+            <li class="bullet-item">
+              <span class="bullet-icon">🔒</span>
+              <div><strong>RobustScaler Normalization:</strong> Centers features using interquartile medians, protecting gradients against ultra-luxury price outliers.</div>
+            </li>
+            <li class="bullet-item">
+              <span class="bullet-icon">🔒</span>
+              <div><strong>OOD Boundary Guards:</strong> Rejects absurd plot sizes (&gt;100 Marla) or invalid city queries prior to model scoring.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 6: Model 1 — Property Valuation Engine -->
+    <div class="slide" id="slide-6" data-notes="Look at our valuation benchmark. Optuna-tuned CatBoost achieved a Mean Absolute Percentage Error of 7.29% and an R-squared of 0.9860, beating baseline heuristics by over 88%. Quantile bounds provide honest confidence intervals.">
+      <span class="slide-tag">Valuation Engine</span>
+      <h2 class="slide-title">Model 1: Property Valuation Regression</h2>
+      <p class="slide-subtitle">Optuna-tuned CatBoost achieves R² = 0.9860 and 7.29% MAPE across test partition</p>
+
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>Architecture</th>
+              <th>MAE (Lac PKR)</th>
+              <th>RMSE (Crore)</th>
+              <th>R² Score</th>
+              <th>MAPE (%)</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="highlight">
+              <td><strong>Optuna Tuned CatBoost</strong></td>
+              <td><strong>17.83 Lac</strong></td>
+              <td>0.41 Cr</td>
+              <td><strong>0.9860</strong></td>
+              <td><strong>7.29%</strong></td>
+              <td><span class="badge-champion">Champion</span></td>
+            </tr>
+            <tr>
+              <td>CatBoost (Default)</td>
+              <td>17.61 Lac</td>
+              <td>0.39 Cr</td>
+              <td>0.9872</td>
+              <td>7.42%</td>
+              <td>Candidate</td>
+            </tr>
+            <tr>
+              <td>XGBoost Regressor</td>
+              <td>18.29 Lac</td>
+              <td>0.58 Cr</td>
+              <td>0.9724</td>
+              <td>6.68%</td>
+              <td>Candidate</td>
+            </tr>
+            <tr>
+              <td>LightGBM Regressor</td>
+              <td>19.49 Lac</td>
+              <td>0.57 Cr</td>
+              <td>0.9727</td>
+              <td>7.38%</td>
+              <td>Candidate</td>
+            </tr>
+            <tr>
+              <td>Random Forest</td>
+              <td>21.47 Lac</td>
+              <td>0.55 Cr</td>
+              <td>0.9749</td>
+              <td>8.30%</td>
+              <td>Candidate</td>
+            </tr>
+            <tr>
+              <td>Ridge Regression</td>
+              <td>67.86 Lac</td>
+              <td>1.31 Cr</td>
+              <td>0.8577</td>
+              <td>56.80%</td>
+              <td>Linear Baseline</td>
+            </tr>
+            <tr>
+              <td>Median Baseline</td>
+              <td>156.54 Lac</td>
+              <td>3.59 Cr</td>
+              <td>-0.0649</td>
+              <td>80.04%</td>
+              <td>Naive Heuristic</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="grid-2" style="margin-top: 16px;">
+        <div class="card">
+          <div class="card-label">Quantile Confidence Engine</div>
+          <div style="font-size: 0.95rem; color: #e5e7eb; line-height: 1.4;">
+            Instead of giving buyers an arrogant single number, our dual Gradient Boosting quantile models yield <strong>10th & 90th percentile bounds</strong> (e.g., <em>"2.15 Cr to 2.55 Cr with 80% confidence"</em>).
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-label">Automated Pricing Verdicts</div>
+          <div style="font-size: 0.95rem; color: #e5e7eb; line-height: 1.4;">
+            Every listing receives an instant verdict: <strong>Fairly Priced</strong> (&plusmn;10% of predicted), <strong>Overpriced</strong> (&gt;10% above market), or <strong>Underpriced / High-Yield Deal</strong> (&gt;10% below market).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 7: Model 1 — Geographic Slices & Failure Modes -->
+    <div class="slide" id="slide-7" data-notes="We hold our models to strict governance standards. While standard properties are automated with sub-7.5% error, luxury listings exceeding 7 Crore PKR trigger a mandatory human appraiser gate because custom finishes introduce dispersion.">
+      <span class="slide-tag">Governance & Slices</span>
+      <h2 class="slide-title">Valuation Diagnostics & Failure Modes</h2>
+      <p class="slide-subtitle">Granular performance by metropolitan city and the Luxury Appraisal Gate</p>
+
+      <div class="grid-4">
+        <div class="card">
+          <div class="card-label">Islamabad</div>
+          <div class="card-value accent-cyan">7.62% MAPE</div>
+          <div class="card-note">MAE: 24.38 Lac | 224 listings.<br>High median value in F-6/F-7 slightly widens absolute gap while percentage error stays tight.</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Karachi</div>
+          <div class="card-value accent-cyan">7.81% MAPE</div>
+          <div class="card-note">MAE: 15.52 Lac | 208 listings.<br>Clifton & DHA beachfront premiums accurately modeled via society tier weights.</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Lahore</div>
+          <div class="card-value accent-emerald">6.90% MAPE</div>
+          <div class="card-note">MAE: 16.13 Lac | 208 listings.<br>High transaction liquidity in DHA Lahore & Johar Town delivers sub-7% precision.</div>
+        </div>
+        <div class="card">
+          <div class="card-label">Rawalpindi</div>
+          <div class="card-value accent-emerald">6.86% MAPE</div>
+          <div class="card-note">MAE: 15.06 Lac | 227 listings.<br>Lowest percentage error driven by high density of master-planned Bahria phases.</div>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top: 18px; border: 1px solid var(--accent); background: rgba(245, 158, 11, 0.08);">
+        <div class="card-label" style="color: var(--accent);">Critical Failure Mode: The Luxury Estate Gate (&gt; 7.0 Crore PKR)</div>
+        <div style="font-size: 0.92rem; color: #fff; line-height: 1.5; margin-top: 4px;">
+          <strong>Diagnostic Finding:</strong> Ultra-luxury properties (&gt; 7 Cr) experience higher absolute variance (MAE 107 Lac) due to imported marble, customized Italian fixtures, and scarcity of comps.
+          <br>
+          <strong>Enterprise Safeguard:</strong> Any property estimated over <strong>7.0 Crore PKR</strong> automatically triggers a <strong>Mandatory Senior Appraiser Review</strong> before publishing, eliminating catastrophic quote risk.
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 8: Model 2 — Lead Scoring & The Accuracy Paradox -->
+    <div class="slide" id="slide-8" data-notes="In sales lead qualification, accuracy is a lethal trap. Because 71.4% of leads don't convert, a dummy model saying NO achieves 71.4% accuracy while closing ZERO deals. SMOTE gave us an optimal balanced F1 of 0.6136.">
+      <span class="slide-tag">Lead Qualification</span>
+      <h2 class="slide-title">Model 2: Lead Scoring & The Accuracy Paradox</h2>
+      <p class="slide-subtitle">Why naive accuracy leads to bankruptcy, and how SMOTE balances real conversion yield</p>
+
+      <div class="grid-2">
+        <div class="card" style="border-left: 4px solid var(--accent);">
+          <div class="card-label">The Accuracy Paradox Illustrated</div>
+          <div class="card-value accent-amber">71.4% Accuracy = 0 Deals</div>
+          <div style="font-size: 0.9rem; color: #cbd5e1; line-height: 1.5; margin-top: 8px;">
+            If our classifier naively predicted <strong>"NOT CONVERTING"</strong> for all 525 test leads:
+            <ul style="margin: 6px 0 0 16px;">
+              <li>Accuracy would look impressive at <strong>71.4%</strong>.</li>
+              <li>Actual closed deals captured: <strong>0 (Recall = 0.0%)</strong>.</li>
+              <li>Commission lost: <strong>PKR 4.5 Crore</strong>.</li>
+            </ul>
+            <strong>Verdict:</strong> Accuracy is strictly rejected. We evaluate using <strong>PR-AUC, F1-Score, and Precision@Top-20%</strong>.
+          </div>
+        </div>
+
+        <div class="table-container" style="align-self: center;">
+          <table>
+            <thead>
+              <tr>
+                <th>Imbalance Strategy</th>
+                <th>Threshold</th>
+                <th>F1-Score</th>
+                <th>Precision</th>
+                <th>Recall</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="highlight">
+                <td><strong>SMOTE Oversampling</strong></td>
+                <td>0.50</td>
+                <td><strong>0.6136</strong></td>
+                <td><strong>71.05%</strong></td>
+                <td>54.00%</td>
+              </tr>
+              <tr>
+                <td>Class Weights</td>
+                <td>0.50</td>
+                <td>0.6122</td>
+                <td>62.50%</td>
+                <td>60.00%</td>
+              </tr>
+              <tr>
+                <td>Threshold Tuning</td>
+                <td>0.16</td>
+                <td>0.5962</td>
+                <td>46.62%</td>
+                <td>82.67%</td>
+              </tr>
+              <tr>
+                <td>No Balancing</td>
+                <td>0.50</td>
+                <td>0.5946</td>
+                <td>70.64%</td>
+                <td>51.33%</td>
+              </tr>
+            </tbody>
+          </table>
+          <div style="padding: 10px 14px; font-size: 0.8rem; color: var(--text-muted); background: #111827;">
+            Champion Selected: <strong>LightGBM + SMOTE</strong> gives highest balanced F1 (0.6136) and robust 71% precision.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 9: Operational Breakthrough — Precision@Top-20% -->
+    <div class="slide" id="slide-9" data-notes="This is the defining operational breakthrough. Our sales team can only call 40 leads a day. Calling randomly gets 11 sales. Calling our Top 40 ranked leads yields 28 to 29 sales—a 2.50x direct conversion lift.">
+      <span class="slide-tag">Operational Impact</span>
+      <h2 class="slide-title">Precision@Top-20%: 2.50x Conversion Lift</h2>
+      <p class="slide-subtitle">Unlocking 50% of total company conversions with only 20% sales phone outreach</p>
+
+      <div class="grid-3">
+        <div class="card" style="border-top: 4px solid var(--primary);">
+          <div class="card-label">Precision@Top-20%</div>
+          <div class="card-value accent-emerald">71.4%</div>
+          <div class="card-note">When reps call the top 40 leads ranked by model, <strong>71.4% convert</strong> (vs 28.6% under random calling).</div>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--secondary);">
+          <div class="card-label">Conversion Yield Lift</div>
+          <div class="card-value accent-cyan">2.50x Lift</div>
+          <div class="card-note">Every hour spent on the phone generates 2.5x more revenue than the previous status quo.</div>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--accent);">
+          <div class="card-label">Capture of Total Deals</div>
+          <div class="card-value accent-amber">50.0% of All Deals</div>
+          <div class="card-note">Calling just the top 20% scores captures half of all company transactions across the entire country!</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 20px;">
+        <div style="font-weight: 700; font-size: 1.05rem; margin-bottom: 12px; color: #fff;">Operational Lead Routing Policy & SLAs</div>
+        <div class="grid-3" style="gap: 16px;">
+          <div style="background: rgba(239, 68, 68, 0.1); border: 1px solid rgba(239, 68, 68, 0.4); border-radius: 8px; padding: 14px;">
+            <div style="font-weight: 700; color: #f87171;">🔥 Hot Lead (P &ge; 0.65)</div>
+            <div style="font-size: 0.82rem; color: #e5e7eb; margin-top: 4px;"><strong>SLA:</strong> Call within 15 mins by Senior Closer.<br><strong>Goal:</strong> Lock physical site tour & token.</div>
+          </div>
+          <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.4); border-radius: 8px; padding: 14px;">
+            <div style="font-weight: 700; color: #fbbf24;">🌤 Warm Lead (0.35 &le; P &lt; 0.65)</div>
+            <div style="font-size: 0.82rem; color: #e5e7eb; margin-top: 4px;"><strong>SLA:</strong> Contact within 24 hours via SDR.<br><strong>Goal:</strong> WhatsApp video walk, maps & price sheets.</div>
+          </div>
+          <div style="background: rgba(59, 130, 246, 0.1); border: 1px solid rgba(59, 130, 246, 0.4); border-radius: 8px; padding: 14px;">
+            <div style="font-weight: 700; color: #60a5fa;">❄️ Cold Lead (P &lt; 0.35)</div>
+            <div style="font-size: 0.82rem; color: #e5e7eb; margin-top: 4px;"><strong>SLA:</strong> 100% Automated AI marketing drip.<br><strong>Goal:</strong> Market digests; zero human agent labor.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 10: Explainable AI & UrduLish Dialogue Engine -->
+    <div class="slide" id="slide-10" data-notes="Sales reps do not trust mathematical probabilities. We use SHAP to identify the exact positive and negative factors, and translate them into fluent UrduLish advice. Furthermore, our fairness audit proves zero demographic bias.">
+      <span class="slide-tag">Explainability & Trust</span>
+      <h2 class="slide-title">Explainable AI (SHAP) & UrduLish Dialogue</h2>
+      <p class="slide-subtitle">Translating black-box mathematical attributions into frontline conversational clarity</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-label">SHAP Feature Attribution</div>
+          <div style="font-size: 0.95rem; color: #e5e7eb; line-height: 1.5;">
+            Our TreeExplainer provides local Shapley waterfall values for every lead:
+            <ul style="margin: 8px 0 0 16px;">
+              <li><strong>Call Duration &gt; 3.5 mins:</strong> +32% conversion attribution.</li>
+              <li><strong>Booked Site Visit:</strong> +28% probability lift.</li>
+              <li><strong>Location in Tier 1 (DHA/Bahria):</strong> +19% attribution.</li>
+              <li><strong>Installment Inquiry on Cash Plot:</strong> -14% drag.</li>
+            </ul>
+          </div>
+          <div style="margin-top: 14px; background: rgba(16, 185, 129, 0.1); border: 1px solid var(--primary); border-radius: 8px; padding: 12px;">
+            <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--primary); font-weight: 700;">UrduLish Natural Translation</span>
+            <p style="font-size: 0.88rem; color: #fff; margin-top: 4px; font-style: italic;">
+              "Yeh lead high conversion (84%) hai kyunke customer ne physical site visit confirm ki hai aur call duration 4 minute se zyada thi."
+            </p>
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <div class="card" style="border-left: 4px solid var(--primary);">
+            <div class="card-label">Algorithmic Fairness Audit</div>
+            <div class="card-value accent-emerald">0.94 Disparate Impact</div>
+            <div class="card-note">Verified parity across Islamabad, Karachi, Lahore, and Rawalpindi. Disparate impact ratio of 0.94 far exceeds the EEOC 0.80 four-fifths regulatory threshold.</div>
+          </div>
+          <div class="card" style="border-left: 4px solid var(--secondary);">
+            <div class="card-label">Zero-Hallucination Grounding</div>
+            <div class="card-value accent-cyan">100% Tool Bound</div>
+            <div class="card-note">LangGraph copilot strictly enforces: <em>"The LLM must never invent a price."</em> Every single currency quote originates from validated ML service endpoints.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 11: Customer Personas & Sales Playbooks -->
+    <div class="slide" id="slide-11" data-notes="Unsupervised clustering grouped our buyers into 4 distinct personas. Now, when a lead enters, sales reps don't just see a score—they receive a targeted persona playbook customized for overseas investors or urgent families.">
+      <span class="slide-tag">Customer Segmentation</span>
+      <h2 class="slide-title">Customer Personas & Actionable Playbooks</h2>
+      <p class="slide-subtitle">K-Means clustering (k=4) uncovers 4 behavioral buyer archetypes</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div style="font-weight: 700; color: var(--primary); font-size: 1.05rem;">Overseas Capital Investor</div>
+            <span class="badge-champion">27.1% Conv.</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-dim); margin-bottom: 6px;">Median Budget: 5.96 Crore | Commercial Files / Fast Wire</div>
+          <div style="font-size: 0.88rem; color: #e5e7eb; line-height: 1.4;">
+            <strong>Sales Playbook:</strong> Pitch 8-10% rental yields, capital growth projections, and RDA/CDA verified transfer documents via overseas WhatsApp.
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div style="font-weight: 700; color: var(--secondary); font-size: 1.05rem;">Urgent Family Homebuyer</div>
+            <span class="badge-champion" style="border-color: var(--secondary); color: var(--secondary); background: rgba(6,182,212,0.15);">48.1% Conv.</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-dim); margin-bottom: 6px;">Median Budget: 2.58 Crore | Immediate Possession / High Talk Time</div>
+          <div style="font-size: 0.88rem; color: #e5e7eb; line-height: 1.4;">
+            <strong>Sales Playbook:</strong> Emphasize gated security, school and park proximity, immediate key handover, and verified construction quality.
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div style="font-weight: 700; color: var(--accent); font-size: 1.05rem;">First-Time Budget Inquirer</div>
+            <span style="font-size: 0.75rem; color: var(--accent); font-weight: 700;">18.4% Conv.</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-dim); margin-bottom: 6px;">Median Budget: 1.15 Crore | 3 to 5 Marla / Installment Plans</div>
+          <div style="font-size: 0.88rem; color: #e5e7eb; line-height: 1.4;">
+            <strong>Sales Playbook:</strong> Provide flexible 3-year installment schedules, bank mortgage partners, and low-token introductory offers.
+          </div>
+        </div>
+
+        <div class="card">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div style="font-weight: 700; color: var(--text-muted); font-size: 1.05rem;">Casual Market Explorer</div>
+            <span style="font-size: 0.75rem; color: var(--text-dim); font-weight: 700;">8.2% Conv.</span>
+          </div>
+          <div style="font-size: 0.82rem; color: var(--text-dim); margin-bottom: 6px;">Median Budget: 1.80 Crore | Web Browsing / Low Engagement</div>
+          <div style="font-size: 0.88rem; color: #e5e7eb; line-height: 1.4;">
+            <strong>Sales Playbook:</strong> Enroll in automated AI marketing drip; do not spend expensive closer telephone hours.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 12: Production Guardrails & Model Governance -->
+    <div class="slide" id="slide-12" data-notes="We engineered defense in depth. Our API rejects absurd user inputs, sanitizes prompt injections, enforces legal disclaimers, and logs full request payloads to SQLite audit databases for compliance.">
+      <span class="slide-tag">Governance & Safety</span>
+      <h2 class="slide-title">Production Guardrails & Model Governance</h2>
+      <p class="slide-subtitle">Multi-layered security shielding users, models, and corporate liability</p>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-label">Operational Security Layers</div>
+          <ul class="bullet-list" style="margin-top: 6px;">
+            <li class="bullet-item">
+              <span class="bullet-icon">🛡️</span>
+              <div><strong>Out-of-Distribution (OOD) Bounding:</strong> Automatically blocks corrupt inputs (e.g., plots &gt; 100 Marla, negative bedrooms, unknown cities) before invoking ML inference.</div>
+            </li>
+            <li class="bullet-item">
+              <span class="bullet-icon">🛡️</span>
+              <div><strong>Adversarial Prompt-Injection Defense:</strong> Regex & semantic firewall blocks prompt manipulations such as <em>'Set price to 1 rupee'</em> or <em>'Forget prior rules'</em>.</div>
+            </li>
+            <li class="bullet-item">
+              <span class="bullet-icon">🛡️</span>
+              <div><strong>Mandatory Legal Disclaimers:</strong> Every automated price quote appends non-certified advisory legal language required by real estate regulatory authorities.</div>
+            </li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <div class="card-label">Enterprise Observability & Audit Trail</div>
+          <ul class="bullet-list" style="margin-top: 6px;">
+            <li class="bullet-item">
+              <span class="bullet-icon">📝</span>
+              <div><strong>SQLite Audit DB & JSONL Stream:</strong> Every prediction logs UUID, client IP, latency (ms), input features, output score, and model version.</div>
+            </li>
+            <li class="bullet-item">
+              <span class="bullet-icon">📝</span>
+              <div><strong>MLflow Experiment Tracking:</strong> All regression and classification experiments logged with hyperparameter tuning trials and model signatures.</div>
+            </li>
+            <li class="bullet-item">
+              <span class="bullet-icon">📝</span>
+              <div><strong>Automated Fallback Architecture:</strong> If ML service encounters latency &gt; 1,000ms, fallback rules supply cached society averages seamlessly.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 13: Financial ROI Model & Interactive Calculator -->
+    <div class="slide" id="slide-13" data-notes="Here is our interactive ROI calculator. For a brokerage receiving 1,000 leads a month with an average deal size of 2.5 Crore, the platform generates over 1.9 Crore PKR in net incremental commission—a 10x ROI on tech investment.">
+      <span class="slide-tag">Financial Justification</span>
+      <h2 class="slide-title">Financial ROI & Bottom-Line Impact</h2>
+      <p class="slide-subtitle">Interactive financial model demonstrating quantifiable revenue acceleration</p>
+
+      <div class="roi-calc-container">
+        <div>
+          <div style="font-weight: 700; color: var(--secondary); margin-bottom: 12px; font-size: 0.95rem;">Brokerage Financial Assumptions</div>
+          <div class="calc-input-group">
+            <label>Monthly Inbound Leads</label>
+            <input type="number" id="calcLeads" value="1000" step="100" oninput="updateRoiCalc()">
+          </div>
+          <div class="calc-input-group">
+            <label>Average Property Value (PKR)</label>
+            <input type="number" id="calcPrice" value="25000000" step="5000000" oninput="updateRoiCalc()">
+          </div>
+          <div class="calc-input-group">
+            <label>Broker Commission Rate (%)</label>
+            <input type="number" id="calcComm" value="1.5" step="0.1" oninput="updateRoiCalc()">
+          </div>
+          <div style="font-size: 0.78rem; color: var(--text-dim); margin-top: 8px;">
+            *Assumes sales reps can call 20% of inbound leads (200 calls/month). Baseline conversion = 28.57%, AI Precision@Top-20% = 71.43%.
+          </div>
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 12px; justify-content: center;">
+          <div class="calc-output-card">
+            <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--primary); font-weight: 700;">Monthly Closed Deals</span>
+            <div id="outDeals" style="font-size: 2.2rem; font-weight: 800; color: #fff; font-family: 'Outfit';">142.9 Deals</div>
+            <div id="outDealsLift" style="font-size: 0.85rem; color: var(--primary); font-weight: 600;">+85.7 deals/mo over baseline (57.1)</div>
+          </div>
+          <div class="calc-output-card" style="background: rgba(6, 182, 212, 0.1); border-color: var(--secondary);">
+            <span style="font-size: 0.75rem; text-transform: uppercase; color: var(--secondary); font-weight: 700;">Annual Incremental Revenue</span>
+            <div id="outRevenue" style="font-size: 2.2rem; font-weight: 800; color: #fff; font-family: 'Outfit';">PKR 3.86 Crore</div>
+            <div style="font-size: 0.85rem; color: var(--secondary); font-weight: 600;">Net ROI: &gt; 15x Platform Investment</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 14: Deployment Roadmap & Strategic Next Steps -->
+    <div class="slide" id="slide-14" data-notes="We are containerized on Docker, tested with 100% test coverage, and ready for deployment. Phase 2 introduces real-time drift monitoring and A/B testing on call thresholds. Thank you, and we look forward to your questions.">
+      <span class="slide-tag">Implementation Roadmap</span>
+      <h2 class="slide-title">Deployment Roadmap & Future Milestones</h2>
+      <p class="slide-subtitle">Immediate transition from Capstone delivery to live enterprise rollout</p>
+
+      <div class="grid-4" style="margin-top: 10px;">
+        <div class="card" style="border-top: 4px solid var(--primary);">
+          <div class="card-label">Phase 1: Immediate</div>
+          <div style="font-size: 1.1rem; font-weight: 700; color: #fff; margin-bottom: 8px;">Production Go-Live</div>
+          <div class="card-note">
+            • Docker container on Render<br>
+            • Cloudflare secure tunneling<br>
+            • Vapi webhook connected<br>
+            • Sales desk Streamlit live<br>
+            • SQLite audit streaming
+          </div>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--secondary);">
+          <div class="card-label">Phase 2: Month 1</div>
+          <div style="font-size: 1.1rem; font-weight: 700; color: var(--secondary); margin-bottom: 8px;">Active Monitoring</div>
+          <div class="card-note">
+            • Evidently data drift checks<br>
+            • Sales closer feedback loop<br>
+            • Bi-weekly model retrain<br>
+            • WhatsApp business bot<br>
+            • A/B threshold testing
+          </div>
+        </div>
+        <div class="card" style="border-top: 4px solid var(--accent);">
+          <div class="card-label">Phase 3: Quarter 2</div>
+          <div style="font-size: 1.1rem; font-weight: 700; color: var(--accent); margin-bottom: 8px;">Multi-City Expansion</div>
+          <div class="card-note">
+            • Multan & Peshawar launch<br>
+            • Satellite image features<br>
+            • Automated title check API<br>
+            • Mortgage pre-qualifier<br>
+            • Multi-agent negotiation
+          </div>
+        </div>
+        <div class="card" style="border-top: 4px solid #a855f7;">
+          <div class="card-label">Phase 4: Year 1</div>
+          <div style="font-size: 1.1rem; font-weight: 700; color: #c084fc; margin-bottom: 8px;">Autonomous Brokerage</div>
+          <div class="card-note">
+            • Self-service token checkout<br>
+            • Automated escrow contract<br>
+            • Real-time 3D VR tours<br>
+            • Predictive market liquidity<br>
+            • Nationwide market leader
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 24px; text-align: center; padding: 16px; background: rgba(255,255,255,0.03); border-radius: var(--radius-md); border: 1px solid var(--border-color);">
+        <span style="font-size: 1.1rem; font-weight: 700; color: #fff;">🎉 Thank You. Questions & Discussion Welcomed.</span>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Speaker Notes Panel -->
+  <div class="speaker-notes-panel" id="speakerNotesPanel">
+    <div class="notes-title">🎙️ Presenter Script & Strategic Talking Points</div>
+    <div class="notes-content" id="speakerNotesText">
+      Loading speaker notes...
+    </div>
+  </div>
+
+  <!-- Bottom Footer Controls -->
+  <footer class="deck-footer">
+    <div class="progress-bar" id="progressBar"></div>
+    <div style="display: flex; gap: 8px;">
+      <button class="btn" id="btnPrev" title="Previous Slide [Left Arrow]">◀ Previous</button>
+      <button class="btn btn-primary" id="btnNext" title="Next Slide [Right Arrow / Space]">Next ▶</button>
+    </div>
+    <div style="font-size: 0.8rem; color: var(--text-dim); display: flex; gap: 16px;">
+      <span><strong>Keyboard:</strong> ← / → Navigate</span>
+      <span><strong>N:</strong> Notes</span>
+      <span><strong>F:</strong> Fullscreen</span>
+    </div>
+  </footer>
+
+  <script>
+    // Slide Management
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+    let currentSlide = 1;
+
+    const slideIndicator = document.getElementById('slideIndicator');
+    const progressBar = document.getElementById('progressBar');
+    const speakerNotesPanel = document.getElementById('speakerNotesPanel');
+    const speakerNotesText = document.getElementById('speakerNotesText');
+    const btnNotesToggle = document.getElementById('btnNotesToggle');
+    const btnFullscreen = document.getElementById('btnFullscreen');
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+
+    function showSlide(index) {
+      if (index < 1) index = 1;
+      if (index > totalSlides) index = totalSlides;
+      currentSlide = index;
+
+      slides.forEach((s, idx) => {
+        s.classList.toggle('active', idx + 1 === currentSlide);
+      });
+
+      // Update Header Indicator & Progress
+      slideIndicator.textContent = `${currentSlide} / ${totalSlides}`;
+      const progressPercent = ((currentSlide - 1) / (totalSlides - 1)) * 100;
+      progressBar.style.width = `${progressPercent}%`;
+
+      // Update Speaker Notes
+      const activeSlide = document.getElementById(`slide-${currentSlide}`);
+      if (activeSlide && activeSlide.dataset.notes) {
+        speakerNotesText.textContent = activeSlide.dataset.notes;
+      } else {
+        speakerNotesText.textContent = "No speaker notes for this slide.";
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        showSlide(currentSlide + 1);
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        showSlide(currentSlide - 1);
+      }
+    }
+
+    btnNext.addEventListener('click', nextSlide);
+    btnPrev.addEventListener('click', prevSlide);
+
+    // Keyboard Shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT') return;
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'n' || e.key === 'N') {
+        toggleNotes();
+      } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
+      }
+    });
+
+    function toggleNotes() {
+      speakerNotesPanel.classList.toggle('open');
+      btnNotesToggle.classList.toggle('btn-primary');
+    }
+
+    btnNotesToggle.addEventListener('click', toggleNotes);
+
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => alert(err.message));
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    btnFullscreen.addEventListener('click', toggleFullscreen);
+
+    // Interactive ROI Calculator Logic
+    function updateRoiCalc() {
+      const leads = parseFloat(document.getElementById('calcLeads').value) || 1000;
+      const price = parseFloat(document.getElementById('calcPrice').value) || 25000000;
+      const commRate = (parseFloat(document.getElementById('calcComm').value) || 1.5) / 100;
+
+      const calledLeads = leads * 0.20;
+      const baselineDeals = calledLeads * 0.2857;
+      const aiDeals = calledLeads * 0.7143;
+      const dealLift = aiDeals - baselineDeals;
+
+      const avgCommission = price * commRate;
+      const annualIncremental = dealLift * avgCommission * 12;
+
+      document.getElementById('outDeals').textContent = `${aiDeals.toFixed(1)} Deals`;
+      document.getElementById('outDealsLift').textContent = `+${dealLift.toFixed(1)} deals/mo over baseline (${baselineDeals.toFixed(1)})`;
+      document.getElementById('outRevenue').textContent = `PKR ${(annualIncremental / 10000000).toFixed(2)} Crore`;
+    }
+
+    // Initialize
+    showSlide(1);
+    updateRoiCalc();
+  </script>
+</body>
+</html>

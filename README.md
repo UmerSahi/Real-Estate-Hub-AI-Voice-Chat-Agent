@@ -433,11 +433,12 @@ Real-Estate-Hub-AI-Voice-Chat-Agent/
 │       ├── train_intent_classifier.py    # Retraining & model promotion script
 │       └── intent_classifier.py          # Inference fallback classifier
 │
-├── Week 8/                               # Machine Learning Serving & Pipelines
+├── Week 8/                               # Machine Learning Serving, Pipelines & Capstone Delivery
 │   ├── Day 1/                            # Data Cleaning, EDA, & 13 Domain Features
-│   ├── Day 2/                            # LightGBM Valuation Regressor & Quantiles
-│   ├── Day 3/                            # LightGBM Lead Scorer, Personas & SHAP
-│   └── Day 4/                            # FastAPI ML Serving & Streamlit Dashboard
+│   ├── Day 2/                            # CatBoost Valuation Regressor & Quantiles (R²=0.9860)
+│   ├── Day 3/                            # LightGBM Lead Scorer, SMOTE (2.50x Lift), Personas & SHAP
+│   ├── Day 4/                            # FastAPI ML Serving, Guardrails & Streamlit Dashboard
+│   └── Day 5/                            # Executive Stakeholder Presentation (PPTX/HTML) & Project Documentation
 │
 ├── realestate-hub/                       # Legacy Day 1–4 Knowledge Base & Storage
 │   ├── data/csv/                         # Core CSV Knowledge Base (Properties, etc.)
